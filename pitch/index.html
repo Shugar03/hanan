@@ -280,6 +280,13 @@
   .mkt.withshot .guarantee .gv { font-size:210px; margin:40px 0 10px; }
   .mkt.withshot .guarantee p { font-size:23px; }
   .mkt.withshot .phone { width:280px; }
+
+  /* ---- v4: observatorio ---- */
+  .obsv { display:grid; grid-template-columns:1fr 340px; gap:110px; margin-top:24px; align-items:center; }
+  .obs-points { list-style:none; display:flex; flex-direction:column; gap:22px; }
+  .obs-points li { background:var(--surface); border-radius:var(--radius-md); padding:36px 40px; font-size:32px; line-height:1.35; color:var(--text-2); border-left:4px solid var(--accent); }
+  .obs-points li b { color:var(--text); font-weight:600; }
+  .obsv .phone { width:340px; }
 </style>
 </head>
 <body>
@@ -319,7 +326,7 @@
     <div class="tagline">El cielo de la Puna, en tu bolsillo: planificalo, miralo y vivilo</div>
     <div class="sub">Jujuy · Argentina · Ruta Jujeña de las Estrellas</div>
     <div class="src">Hanan · cielos de la Puna — pitch de hackathon</div>
-    <div class="counter">01 / 09</div>
+    <div class="counter">01 / 10</div>
     <div class="notes">Hanan es la app de la noche de la Puna. En una sola app planificás adónde y cuándo ir, mirás el cielo en vivo y reservás la salida con un guía habilitado.</div>
   </section>
 
@@ -354,7 +361,7 @@
       </div>
     </div>
     <div class="src">Fuentes: Ministerio de Cultura y Turismo de Jujuy 2025 · SMN normales 1981–2010 · cálculo propio con astronomy-engine</div>
-    <div class="counter">02 / 09</div>
+    <div class="counter">02 / 10</div>
     <div class="notes">Hoy salir a mirar el cielo en la Puna exige cinco apps y un contacto de WhatsApp, y ninguna conoce el lugar ni anda sin señal. Encima la noche se gana o se pierde por el cielo: enero tiene casi cuatro veces la nubosidad de julio.</div>
   </section>
 
@@ -385,7 +392,7 @@
       </div>
     </div>
     <div class="src">Fuentes: Fundación Starlight · Prensa Jujuy · Cultura y Turismo Jujuy (julio 2025)</div>
-    <div class="counter">03 / 09</div>
+    <div class="counter">03 / 10</div>
     <div class="notes">El momento es ahora: certificación Starlight nueva, dos observatorios recientes en la Puna y una brecha de ocupación. El astroturismo es un producto de pernocte: cada noche aprovechada es una noche de hotel en la Puna.</div>
   </section>
 
@@ -410,7 +417,7 @@
         <p class="give">Publica salidas con su precio, ve demanda y clima, reprograma y cobra.</p>
       </div>
     </div>
-    <div class="counter">04 / 09</div>
+    <div class="counter">04 / 10</div>
     <div class="notes">Tres usuarios con un trabajo concreto cada uno: el turista quiere no perder su única noche, el aficionado quiere planificar solo, y el guía quiere llenar sus salidas sin que el clima le cancele todo.</div>
   </section>
 
@@ -425,13 +432,30 @@
       <div class="tab"><div class="phone"><img src="app/mi-noche.png" alt="Pestaña Mi noche: plan recomendado con su porqué"></div><h3>Mi noche</h3><div class="src2">planificador</div><p>Punto, noche y horario según tu objetivo y tu equipo.</p></div>
     </div>
     <div class="guiabar"><b>Modo guía</b> Crear salidas, ver demanda y reservas, reprogramar con un toque.</div>
-    <div class="counter">05 / 09</div>
+    <div class="counter">05 / 10</div>
     <div class="notes">Cuatro pestañas: Explorar para planificar, Cielo para mirar en el salar, Salidas para reservar y Mi noche para el aficionado que va por su cuenta. El guía cambia de rol y opera sus salidas. Acá va la demo en vivo.</div>
   </section>
 
-  <!-- 6 · MARKETPLACE -->
+  <!-- 6 · OBSERVATORIO -->
   <section class="slide">
-    <div class="kicker"><span class="n">06</span> — Marketplace</div>
+    <div class="kicker"><span class="n">06</span> — Observatorio</div>
+    <h2 class="sol-title">Modo Observatorio: apuntá el teléfono al cielo</h2>
+    <div class="obsv">
+      <ul class="obs-points">
+        <li><b>Un toque abre la cámara.</b> Desde Explorar o Cielo, sin instalar nada.</li>
+        <li><b>Estrellas, planetas, constelaciones y satélites</b> encima de la imagen, en tiempo real.</li>
+        <li><b>Se calibra con la Luna o una estrella</b> y funciona en modo rojo para no encandilarte.</li>
+      </ul>
+      <div class="phone"><img src="app/observatorio.png" alt="Modo Observatorio en Susques: la Cruz del Sur sobre la cámara, mirando al sudeste a 25°"></div>
+    </div>
+    <div class="src">Captura: Susques, 23 nov 2026 · 04:30, mirando al sudeste a 25°. Imagen de cámara simulada para la captura.</div>
+    <div class="counter">06 / 10</div>
+    <div class="notes">El Observatorio convierte el teléfono en un visor: apuntás al cielo y ves encima qué es cada estrella, planeta o satélite. Se calibra en segundos con la Luna o una estrella brillante, y en modo rojo no te arruina la vista.</div>
+  </section>
+
+  <!-- 7 · MARKETPLACE -->
+  <section class="slide">
+    <div class="kicker"><span class="n">07</span> — Marketplace</div>
     <h2 class="sol-title">Como Uber o Luma, pero para la noche de la Puna</h2>
     <div class="mkt withshot">
       <ol class="flow">
@@ -448,13 +472,13 @@
       <div class="phone"><img src="app/ficha.png" alt="Ficha de una salida con el cielo de esa noche y el botón Reservar"></div>
     </div>
     <div class="src">Fuentes: Ley provincial 6308 y Decreto 7843-CyT-23 (Registro Único de Guías de Turismo de Jujuy)</div>
-    <div class="counter">06 / 09</div>
+    <div class="counter">07 / 10</div>
     <div class="notes">Cada guía habilitado publica sus salidas con su precio, como en Luma, y el turista reserva con seña. El diferencial es la garantía de cielo: si seis horas antes el score cae debajo de 40, se reprograma o se devuelve la seña.</div>
   </section>
 
-  <!-- 7 · CÓMO FUNCIONA -->
+  <!-- 8 · CÓMO FUNCIONA -->
   <section class="slide">
-    <div class="kicker"><span class="n">07</span> — Cómo funciona</div>
+    <div class="kicker"><span class="n">08</span> — Cómo funciona</div>
     <div class="how">
       <div class="pcol">
         <h3>Fuentes cruzadas</h3>
@@ -483,13 +507,13 @@
       </div>
     </div>
     <div class="src">Fuentes de datos: astronomy-engine · Open-Meteo · CelesTrak · Pasos internacionales (Argentina) · d3-celestial (BSD-3)</div>
-    <div class="counter">07 / 09</div>
+    <div class="counter">08 / 10</div>
     <div class="notes">Cruzamos cinco fuentes abiertas en una sola métrica explicable, el score de la noche, que es la misma en toda la app. Todo corre local: funciona sin señal y en modo rojo.</div>
   </section>
 
-  <!-- 8 · MODELO DE NEGOCIO -->
+  <!-- 9 · MODELO DE NEGOCIO -->
   <section class="slide">
-    <div class="kicker"><span class="n">08</span> — Modelo de negocio</div>
+    <div class="kicker"><span class="n">09</span> — Modelo de negocio</div>
     <div class="biz">
       <div class="bcard">
         <div class="tag2">Comisión</div>
@@ -515,13 +539,13 @@
     </div>
     <div class="context"><span class="num">Métrica norte: <em>noches aprovechadas</em> por semana</span></div>
     <div class="src">Precios: no definidos; se validan con 3–5 guías en el piloto. El pronóstico básico queda gratis.</div>
-    <div class="counter">08 / 09</div>
+    <div class="counter">09 / 10</div>
     <div class="notes">Cuatro fuentes de ingreso, sin precios inventados: comisión por reserva como hipótesis, dos planes Pro y una licencia B2G. Medimos una sola cosa: noches aprovechadas por semana, es decir, reservas cumplidas y planes ejecutados con buen cielo.</div>
   </section>
 
-  <!-- 9 · ROADMAP + CIERRE -->
+  <!-- 10 · ROADMAP + CIERRE -->
   <section class="slide">
-    <div class="kicker"><span class="n">09</span> — Roadmap</div>
+    <div class="kicker"><span class="n">10</span> — Roadmap</div>
     <div class="steps three">
       <div class="step now">
         <div class="when">Hoy</div>
@@ -563,7 +587,7 @@
 </svg></div>
       <div class="line">El cielo de la Puna, en tu bolsillo</div>
     </div>
-    <div class="counter">09 / 09</div>
+    <div class="counter">10 / 10</div>
     <div class="notes">Hoy mostramos la demo completa. En uno o dos meses, piloto con cinco guías verificados, seña con Mercado Pago y AR. Después, reseñas y una capa de cielo andino co-creada con las comunidades. Hanan: el cielo de la Puna, en tu bolsillo.</div>
   </section>
 

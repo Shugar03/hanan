@@ -16,8 +16,9 @@ Una app (PWA, funciona sin señal) con cuatro pestañas y un modo guía:
 | **Salidas** | Marketplace tipo Luma: salidas de guías con precio, ficha con el cielo de esa noche, reserva con seña (simulada en la demo), `.ics` y garantía de cielo |
 | **Mi noche** | Planificador para aficionados: 3 planes recomendados con su porqué, qué ver, checklist y alertas |
 | **Modo guía** | Crear salidas con precio, ver demanda, alertas de noches excelentes y reprogramar |
+| **Observatorio** | Un toque desde Explorar o Cielo abre la cámara con el cielo superpuesto en realidad aumentada (brújula + giroscopio, calibración con la Luna o una estrella). Requiere HTTPS |
 
-Además: **modo rojo** de visión nocturna y simulador de fecha (`?fecha=2026-06-20T22:00`). Definición de producto: [`docs/product/product-vision.md`](docs/product/product-vision.md).
+Además: **tema claro/oscuro**, **modo rojo** de visión nocturna y simulador de fecha (`?fecha=2026-06-20T22:00`). Definición de producto: [`docs/product/product-vision.md`](docs/product/product-vision.md).
 
 ## Stack
 React + Vite + TypeScript · MapLibre GL · astronomy-engine · satellite.js · Open-Meteo · CelesTrak · Cloudflare Worker (`worker/`) · vitest · Playwright (`e2e/`).
