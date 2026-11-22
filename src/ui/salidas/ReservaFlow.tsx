@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
+import { ChevronLeft } from 'lucide-react';
+import { ICON } from '../kit';
 import { whatsappLink } from '../../data/salidas';
 import { pointById, shortName } from '../../data/points';
 import {
@@ -40,7 +42,7 @@ export function ReservaFlow({ salida: s, nightScore, now, onClose }: Props) {
   return (
     <section className="sx sx-flow" aria-labelledby="sx-flow-h">
       <button type="button" className="sx-back" onClick={step === 2 ? () => setStep(1) : onClose}
-        aria-label={step === 2 ? 'Volver a cantidad de personas' : 'Volver a la salida'}>‹ {step === 2 ? 'Personas' : 'Salida'}</button>
+        aria-label={step === 2 ? 'Volver a cantidad de personas' : 'Volver a la salida'}><ChevronLeft {...ICON} size={18} />{step === 2 ? 'Personas' : 'Salida'}</button>
       <ol className="sx-steps" aria-label="Pasos de la reserva">
         {STEPS.map((l, i) => <li key={l} aria-current={step === i + 1 ? 'step' : undefined} data-done={step > i + 1}><span className="sx-tab">{i + 1}</span> {l}</li>)}
       </ol>

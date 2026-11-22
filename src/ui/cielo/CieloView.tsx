@@ -1,3 +1,5 @@
+import { X } from 'lucide-react';
+import { ICON } from '../kit';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import * as A from 'astronomy-engine';
 import { cardinal, cameraBasis, circumpolar, enuToAltAz, eqjToEnu, mulVec, raDecToVec, riseSet, type Camera } from '../../sky/stars';
@@ -289,7 +291,7 @@ function Ficha({ p, date, point, onClose }: { p: Picked; date: Date; point: Poin
           <p className="cielo-ficha-sub">{p.sub}{p.extra ? ` · ${p.extra}` : ''}</p>
         </div>
         <button type="button" className="cielo-x" aria-label="Cerrar ficha" onClick={onClose}>
-          <svg viewBox="0 0 20 20" width="18" height="18"><path d="M5 5l10 10M15 5L5 15" /></svg>
+          <X {...ICON} size={18} />
         </button>
       </div>
       <dl className="cielo-ficha-data">

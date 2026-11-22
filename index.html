@@ -8,6 +8,17 @@
     <link rel="manifest" href="./manifest.webmanifest" />
     <link rel="icon" href="./icon.svg" type="image/svg+xml" />
     <title>Hanan · cielos de la Puna</title>
+    <script>
+      /* Tema y modo antes del primer pintado (sin destello). El modo rojo gana sobre el tema. */
+      (function () {
+        try {
+          var d = document.documentElement, t = localStorage.getItem('hanan:tema');
+          if (t !== 'claro' && t !== 'oscuro') t = matchMedia('(prefers-color-scheme: light)').matches ? 'claro' : 'oscuro';
+          d.dataset.tema = t;
+          if (localStorage.getItem('hanan:modo') === 'rojo') d.dataset.modo = 'rojo';
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

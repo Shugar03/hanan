@@ -22,6 +22,15 @@
   --rojo-tenue: #8A1C1C;
   --rojo-texto-2: #E04545;
   --rojo-texto: #FF4D4D;
+  /* Tema claro (primitivos): papel de salar y tinta de noche. Naranja y scores oscurecidos para AA sobre sal. */
+  --papel: #FBF8F3;
+  --arena: #D6CDBE;
+  --ceniza-oscura: #5C564D;
+  --naranja-tierra: #B04B14;
+  --cobre-oscuro: #9A3E12;
+  --yareta-oscura: #2E6B47;
+  --ambar-oscuro: #8A5300;
+  --colorado-oscuro: #B23A1F;
   /* Alias legacy v1 (no usar en código nuevo) */
   --oro-estelar: var(--naranja); /* #F07A2E */
   --ocre: var(--cobre); /* #D2602A */
@@ -47,6 +56,23 @@
   --score-bueno: var(--yareta); /* #A9D6B5 */
   --score-medio: var(--ambar); /* #F5B25E */
   --score-malo: var(--colorado); /* #EE6A4A */
+}
+
+/* Tema claro: mismos roles, valores de día (fondo sal, superficie papel, texto noche).
+   Contrastes sobre sal #F4EFE6 / papel #FBF8F3. El modo rojo siempre gana: por eso :not([data-modo="rojo"]). */
+:root[data-tema="claro"]:not([data-modo="rojo"]) {
+  color-scheme: light;
+  --bg: var(--sal); /* #F4EFE6 */
+  --surface: var(--papel); /* #FBF8F3 */
+  --border: var(--arena); /* #D6CDBE */
+  --text: var(--noche); /* #0A0B0F · 17,17:1 */
+  --text-2: var(--ceniza-oscura); /* #5C564D · 6,34:1 */
+  --accent: var(--naranja-tierra); /* #B04B14 · 4,75:1 */
+  --accent-warm: var(--cobre-oscuro); /* #9A3E12 · 5,97:1 */
+  --on-accent: var(--papel); /* #FBF8F3 · 5,13:1 sobre naranja-tierra */
+  --score-bueno: var(--yareta-oscura); /* #2E6B47 · 5,54:1 */
+  --score-medio: var(--ambar-oscuro); /* #8A5300 · 5,53:1 */
+  --score-malo: var(--colorado-oscuro); /* #B23A1F · 5,21:1 */
 }
 
 /* Modo visión nocturna: solo rojos sobre negro, sin azules ni blancos. El score se distingue por número + etiqueta. */

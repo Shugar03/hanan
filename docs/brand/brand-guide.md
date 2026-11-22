@@ -17,7 +17,7 @@ Hanan combina dos registros:
 - **Precisión:** datos, horas exactas, incertidumbre explícita.
 - **Calidez de la Puna:** la noche casi negra de altura, los cerros naranjas al atardecer, el blanco del salar y de las estrellas.
 
-Estilo **minimalista premium**: una sola familia tipográfica, color plano, superficies separadas por un paso de tono (no por líneas ni sombras), nada de gradientes, brillos, vidrio, emojis ni íconos de stock. Sin folclorizar: nada de guardas decorativas, ponchos ni símbolos sagrados como adorno.
+Estilo **minimalista premium**: una sola familia tipográfica, color plano, superficies separadas por un paso de tono (no por líneas ni sombras), nada de gradientes, brillos, vidrio ni emojis. Los íconos de interfaz salen de un solo set (lucide-react, 20 px, trazo 1,75); nada de ilustraciones de stock. Sin folclorizar: nada de guardas decorativas, ponchos ni símbolos sagrados como adorno.
 
 **Promesa:** *Hanan junta el mejor cielo con el guía indicado.* La marca le habla a dos públicos con la misma voz: al **aficionado/turista** ("¿vamos esta noche?") y al **guía** ("esta noche se llena"). El cielo es lo que los une.
 
@@ -53,7 +53,7 @@ Un cardón (*Leucostele atacamensis*, ex *Trichocereus*) dibujado como una const
 **Reglas**
 - Tamaño mínimo: **24 px** de alto (isotipo) y **120 px** de ancho (lockup).
 - Margen de seguridad: 4 u alrededor (1/12 del lado).
-- Solo sobre fondos oscuros (`noche`, `noche-2`, negro) o sobre `naranja` en la versión de ícono de app.
+- Solo sobre fondos oscuros (`noche`, `noche-2`, negro) o sobre `naranja` en la versión de ícono de app. Excepción: en el tema claro de la app el isotipo inline toma los roles (ver *Tema claro*).
 - No rotar, no deformar, no rellenar la silueta, no sumar sombras, brillos ni gradientes. No cambiar de lugar la estrella naranja.
 - Si se incrusta el SVG inline varias veces en una misma página, darle a cada copia un `id` de máscara único (por ejemplo `hanan-ml-1`, `hanan-ml-2`).
 
@@ -96,6 +96,35 @@ Contraste WCAG 2.x calculado sobre `noche` #0A0B0F (y sobre `noche-2` #16181E cu
 - Proporción en pantalla: ~80 % noche, ~15 % sal/ceniza, ≤ 5 % naranja. El naranja se reserva para la acción principal, la estrella del logo y la mejor ventana de la noche.
 - Los tres colores de score son funcionales (el verde liquen de la yareta, ámbar y colorado); no se usan como decoración. El score siempre va con número + etiqueta.
 - Alias heredados de la v1 (`--oro-estelar`, `--ocre`, `--indigo`) siguen definidos y apuntan a `naranja`, `cobre` y `noche-3`. No usarlos en código nuevo.
+
+### Tema claro
+
+Para el uso de día (el turista que planifica en el hostal, el guía en la oficina, la pantalla a pleno sol). Con `data-tema="claro"` en `<html>` se redefinen **los mismos roles** que en el tema oscuro. El fondo es `sal`, la superficie es papel, el texto es `noche`, y el naranja y los scores se oscurecen para pasar AA sobre sal. El toggle está en el header (sol/luna, `aria-label` "Tema claro"/"Tema oscuro"), se guarda en `localStorage` (`hanan:tema`) y por defecto sigue `prefers-color-scheme`.
+
+**El modo rojo siempre gana**: el selector es `:root[data-tema="claro"]:not([data-modo="rojo"])`, así que con `data-modo="rojo"` se ve rojo sobre negro aunque el tema sea claro.
+
+Contraste WCAG 2.x calculado sobre `sal` #F4EFE6 (fondo) y `papel` #FBF8F3 (superficie).
+
+| Rol | Token | Hex | Sobre `sal` | Sobre `papel` |
+|---|---|---|---|---|
+| `--bg` | `sal` | #F4EFE6 | — | — |
+| `--surface` | `papel` | #FBF8F3 | — | — |
+| `--border` | `arena` | #D6CDBE | 1,37 : 1 (no es texto, igual que `noche-3` en oscuro) | 1,49 : 1 |
+| `--text` | `noche` | #0A0B0F | 17,17 : 1 (AAA) | 18,57 : 1 (AAA) |
+| `--text-2` | `ceniza-oscura` | #5C564D | 6,34 : 1 (AA) | 6,85 : 1 (AA) |
+| `--accent` | `naranja-tierra` | #B04B14 | 4,75 : 1 (AA) | 5,13 : 1 (AA) |
+| `--accent-warm` | `cobre-oscuro` | #9A3E12 | 5,97 : 1 (AA) | 6,45 : 1 (AA) |
+| `--on-accent` | `papel` | #FBF8F3 | sobre `naranja-tierra`: 5,13 : 1 (AA) | — |
+| `--score-bueno` | `yareta-oscura` | #2E6B47 | 5,54 : 1 (AA) · papel encima 5,99 : 1 | 5,99 : 1 |
+| `--score-medio` | `ambar-oscuro` | #8A5300 | 5,53 : 1 (AA) · papel encima 5,97 : 1 | 5,97 : 1 |
+| `--score-malo` | `colorado-oscuro` | #B23A1F | 5,21 : 1 (AA) · papel encima 5,63 : 1 | 5,63 : 1 |
+
+- **Por qué se ajusta el naranja:** `naranja` #F07A2E da 2,44 : 1 sobre sal y no sirve para texto ni para botones con texto. `naranja-tierra` #B04B14 es el mismo tono (cerro al atardecer) con menos luminancia: pasa AA como texto y como fondo de botón con texto `papel`.
+- **Score:** el número va en `papel` sobre el tono, o el tono como color de texto sobre sal. En los dos casos es ≥ 5,2 : 1. Siempre va número + etiqueta.
+- **Isotipo en claro:** el componente `Mark` toma los roles: estrellas `--text` (noche), trazos `--text-2` y la estrella mayor `--accent` (naranja-tierra). Es la única aplicación del isotipo sobre fondo claro autorizada en la app; en piezas impresas sigue valiendo la placa clara del QR (§9).
+- **Mapa:** Esri World Light Gray Base + World Hillshade (sin key, "Relieve y base: Esri · © OpenStreetMap"). En modo rojo vuelve a las teselas oscuras.
+- **Cielo:** la pestaña Cielo **sigue oscura** en tema claro: es una ventana al cielo nocturno, un fondo claro sería físicamente falso y se usa de noche. Re-declara los roles oscuros con `.tema-noche`.
+- Proporción en pantalla: ~80 % sal/papel, ~15 % noche/ceniza oscura, ≤ 5 % naranja-tierra. Sin sombras para separar superficies (un paso de tono). Solo los popovers llevan una sombra suave con offset.
 
 ### Modo rojo (visión nocturna)
 La luz azul y blanca arruina la adaptación del ojo a la oscuridad (tarda 20–30 min en recuperarse). Con `data-modo="rojo"` en un contenedor, los roles pasan a rojos sobre negro puro. **Los primitivos (`--sal`, `--naranja`…) no cambian**: por eso los componentes deben usar roles.

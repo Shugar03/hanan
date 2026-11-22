@@ -13,6 +13,8 @@ import { allSalidas, salidasForNight, whatsappLink } from '../data/salidas';
 import { demandCount, toggleWant, iWant } from '../data/demand';
 import { ago, deg, fmtNum, hhmm, longDate, nightLabel, pct, range } from './format';
 import { Bar, ScoreBadge } from './Score';
+import { Check, ChevronRight } from 'lucide-react';
+import { Disclosure, ICON, Stat } from './kit';
 
 type Props = {
   models: Record<PointId, PointModel>;
@@ -67,17 +69,23 @@ export function Panel({ models, selected, onSelect, now, simulated, sats }: Prop
           <span className="hero-num num" data-tone={nightTone(nightInfo)}>{nightInfo.score}</span>
           <div>
             <p className="hero-label">{nightInfo.label}</p>
-            <p className="muted small">{nightInfo.window ? 'score de la noche: promedio de su mejor ventana · de 0 a 100' : 'ninguna hora llega a 40: es el pico de la noche'}</p>
+            <p className="muted small">{nightInfo.window ? 'score de la noche · de 0 a 100' : 'pico de la noche · ninguna hora llega a 40'}</p>
           </div>
         </div>
         <p className="hero-window">
           {nightInfo.window
-            ? <>Ventana de observación: <b className="num">{windowText(nightInfo.window)}</b>{nightInfo.peak ? <> · pico <span className="num">{nightInfo.peak.score}</span> a las <span className="num">{hhmm(nightInfo.peak.time)}</span></> : null}</>
+            ? <>Ventana <b className="num">{windowText(nightInfo.window)}</b>{nightInfo.peak ? <> · pico <span className="num">{nightInfo.peak.score}</span> a las <span className="num">{hhmm(nightInfo.peak.time)}</span></> : null}</>
             : <>Ninguna hora llega a 40 {nightLabel(night, today(now))}.</>}
         </p>
       </section>
 
       <WeekBest m={m} models={models} todayStr={today(now)} onPick={(n) => setNight(n)} onSelect={onSelect} />
+
+      <Salidas m={m} night={night} todayStr={today(now)} />
+
+      <WantToGo pointId={selected} night={night} pointName={shortName(m.point)} label={nightLabel(night, today(now))} />
+
+      <h2 className="group-h">Detalle de la noche</h2>
 
       <Timeline hours={m.timeline} focus={focus} onFocus={(t) => { setHourSel(t.getTime()); const n = nightOf(t); if (n !== night && m.nights.some((x) => x.night === n)) setNight(n); }} />
 
@@ -86,10 +94,6 @@ export function Panel({ models, selected, onSelect, now, simulated, sats }: Prop
       <Weather m={m} night={night} />
 
       <WhatYouSee m={m} night={night} />
-
-      <Salidas m={m} night={night} todayStr={today(now)} />
-
-      <WantToGo pointId={selected} night={night} pointName={shortName(m.point)} label={nightLabel(night, today(now))} />
 
       <Satellites passes={sats.upcoming} fetchedAt={sats.fetchedAt} origin={sats.origin} simulated={simulated} />
     </div>
@@ -164,8 +168,10 @@ function WeekBest({ m, models, todayStr, onPick, onSelect }: { m: PointModel; mo
         <span className="best-when">{cap(nightLabel(b.night, todayStr))}, <b className="num">{windowText(w)}</b></span>
         <ScoreBadge score={b.score} label={b.label} />
       </p>
-      <p className="muted small">{fmtNum((+w.end - +w.start) / 3600_000)} h dentro de la noche astronómica · {longDate(b.night)}</p>
-      <button className="btn btn-ghost" onClick={() => onPick(b.night)}>Ver esa noche</button>
+      <p className="best-foot">
+        <span className="muted small">{fmtNum((+w.end - +w.start) / 3600_000)} h de noche astronómica</span>
+        <button className="btn btn-ghost btn-sm" onClick={() => onPick(b.night)}>Ver esa noche <ChevronRight {...ICON} size={16} /></button>
+      </p>
     </section>
   );
 }
@@ -194,7 +200,7 @@ function Timeline({ hours, focus, onFocus }: { hours: SkyScore[]; focus: SkyScor
           );
         })}
       </div>
-      <p className="muted small">Las horas de día aparecen en gris, sin score. Tocá una hora para ver su desglose.</p>
+      <p className="muted small">Tocá una hora para ver su desglose. De día no hay score.</p>
     </section>
   );
 }
@@ -224,7 +230,9 @@ function Factors({ s, cond }: { s: SkyScore; cond?: { cloudLow: number; cloudMid
           </li>
         ))}
       </ul>
-      <p className="muted small">score = 100 × oscuridad × nubes × luna × humedad × viento{s.astronomyOnly ? ' · sin pronóstico, nubes/humedad/viento se asumen en 1' : ''}</p>
+      <Disclosure summary="Cómo se calcula">
+        <p className="muted small">score = 100 × oscuridad × nubes × luna × humedad × viento{s.astronomyOnly ? ' · sin pronóstico, nubes/humedad/viento se asumen en 1' : ''}</p>
+      </Disclosure>
     </section>
   );
 }
@@ -240,8 +248,8 @@ function Weather({ m, night }: { m: PointModel; night: string }) {
   return (
     <section className="card">
       <h2>Frío y viento en la ventana</h2>
-      <p><b className="num">{fmtNum(tmin)} °C</b> de mínima prevista y ráfagas de hasta <b className="num">{fmtNum(gust, 0)} km/h</b>.</p>
-      <p className="muted">Llevá {advice}.{gust > 50 ? ' Ráfagas fuertes: protegé el telescopio y evitá lugares expuestos.' : ''}</p>
+      <div className="stats"><Stat value={`${fmtNum(tmin)} °C`} label="mínima prevista" /><Stat value={`${fmtNum(gust, 0)} km/h`} label="ráfagas máximas" /></div>
+      <p className="muted small">Llevá {advice}.{gust > 50 ? ' Ráfagas fuertes: protegé el telescopio y evitá lugares expuestos.' : ''}</p>
     </section>
   );
 }
@@ -257,7 +265,7 @@ function WhatYouSee({ m, night }: { m: PointModel; night: string }) {
         <div><dt>Luna</dt><dd>{n.moon.phaseName}, {pct(n.moon.illumination)} iluminada{n.moon.rise ? ` · sale ${hhmm(n.moon.rise)}` : ''}{n.moon.set ? ` · se pone ${hhmm(n.moon.set)}` : ''}{n.moon.illumination > 0.75 ? '. Ideal para mirarla a ella, no a las galaxias.' : ''}</dd></div>
         <div><dt>Núcleo de la Vía Láctea</dt><dd>{mw.maxAltitudeDeg > 0 ? `Llega a ${deg(mw.maxAltitudeDeg)} de altura${mw.maxAt ? ` (${hhmm(mw.maxAt)})` : ''}` : 'No sale durante la noche astronómica'} · {fmtNum(mw.hoursAbove20)} h por encima de 20°</dd></div>
         <div><dt>Planetas al final del crepúsculo</dt><dd>{n.planets.length ? n.planets.map((p) => `${p.name} ${deg(p.altitudeDeg)}`).join(' · ') : 'Ninguno sobre el horizonte'}</dd></div>
-        <div><dt>Nubes de Magallanes</dt><dd>{n.magellanic.map((x) => `${x.name.replace(' de Magallanes', '')} ${deg(x.altitudeDeg)}`).join(' · ')} · altura máxima en la noche astronómica. Acá nunca se ponen, pero cuando están a menos de 15° cuestan verlas</dd></div>
+        <div><dt>Nubes de Magallanes · altura máxima</dt><dd>{n.magellanic.map((x) => `${x.name.replace(' de Magallanes', '')} ${deg(x.altitudeDeg)}`).join(' · ')}. Nunca se ponen; bajo 15° cuesta verlas</dd></div>
       </dl>
       {n.seasonalNote && <p className="season">{n.seasonalNote}</p>}
     </section>
@@ -297,13 +305,13 @@ function SalidaCard({ s, score, sky, pointName, n }: { s: Salida; score?: SkySco
           <p className="salida-guide">{s.guideName}</p>
           <p className="tags">
             {s.demo && <span className="tag tag-demo">Ejemplo</span>}
-            {s.guideRegistered ? <span className="tag">Guía registrado · verificación manual</span> : <span className="tag tag-muted">Registro sin verificar</span>}
+            {s.guideRegistered ? <span className="tag">Guía registrado</span> : <span className="tag tag-muted">Registro sin verificar</span>}
           </p>
         </div>
-        {sky && <span className="salida-night"><ScoreBadge score={sky.score} label={sky.label} size="sm" /><span className="muted small">score de la noche</span></span>}
+        {sky && <span className="salida-night"><ScoreBadge score={sky.score} label={sky.label} size="sm" /><span className="muted small">noche</span></span>}
       </div>
       <p className="salida-meta num">{hhmm(s.departure)} · {fmtNum(s.durationH)} h · cupo {s.capacity} · {s.languages.join(' / ').toUpperCase()}</p>
-      {score && <p className="muted small">Cielo a la hora de salida ({hhmm(s.departure)}): <span className="num">{score.score}</span>/100{score.label !== 'Día' ? `, ${score.label.toLowerCase()}` : ', todavía es de día'}.{sky?.window ? ` Mejor ventana de esa noche: ${windowText(sky.window)}.` : ''}</p>}
+      {score && <p className="muted small">A las {hhmm(s.departure)}: <span className="num">{score.score}</span>/100{score.label !== 'Día' ? `, ${score.label.toLowerCase()}` : ', todavía es de día'}{sky?.window ? ` · mejor ventana ${windowText(sky.window)}` : ''}</p>}
       {(s.meetingPoint || s.priceRef) && <p className="muted small">{s.meetingPoint ? `Partida: ${s.meetingPoint}. ` : ''}{s.priceRef ? `Precio: ${s.priceRef}` : ''}</p>}
       <a className="btn btn-primary" href={whatsappLink(s.whatsapp, msg)} target="_blank" rel="noreferrer">Reservar por WhatsApp</a>
     </li>
@@ -317,10 +325,10 @@ function WantToGo({ pointId, night, pointName, label }: { pointId: PointId; nigh
   return (
     <section className="card want">
       <button className="btn btn-want" aria-pressed={on} onClick={() => { toggleWant(pointId, night); force((x) => x + 1); }}>
-        {on ? '✓ Quiero ir' : 'Quiero ir'}
+        {on && <Check {...ICON} size={18} />}Quiero ir
       </button>
       <p><b className="num">{c.total}</b> {c.total === 1 ? 'persona quiere' : 'personas quieren'} ir a {pointName} {label}.</p>
-      <p className="muted small">{c.demo} son datos de ejemplo{c.mine ? ' + vos' : ''}. Señal anónima, guardada solo en este dispositivo.</p>
+      <p className="muted small">{c.demo} de ejemplo{c.mine ? ' + vos' : ''} · señal anónima, solo en este dispositivo.</p>
     </section>
   );
 }
@@ -337,8 +345,10 @@ function Satellites({ passes, fetchedAt, origin, simulated }: { passes: SatPass[
           ))}
         </ul>
       ) : <p>Pasa sobre vos, pero no se ve a simple vista.</p>}
-      {passes.length > visible.length && <p className="muted small">{passes.length - visible.length} sobrevuelos más sin visibilidad (de día o en la sombra de la Tierra). ARSAT 2 es geoestacionario y no se ve a simple vista.</p>}
-      <p className="muted small">Pase visible: más de 10° de altura, sol a menos de −6° y satélite iluminado. Órbitas {origin === 'red' ? 'actualizadas' : 'guardadas'} {ago(fetchedAt)}{simulated ? ' · con el simulador la precisión baja lejos de esa fecha' : ''}.</p>
+      <Disclosure summary={passes.length > visible.length ? `${passes.length - visible.length} sobrevuelos no visibles · cómo se calcula` : 'Cómo se calcula'}>
+        {passes.length > visible.length && <p className="muted small">De día o en la sombra de la Tierra. ARSAT 2 es geoestacionario y no se ve a simple vista.</p>}
+        <p className="muted small">Pase visible: más de 10° de altura, sol a menos de −6° y satélite iluminado. Órbitas {origin === 'red' ? 'actualizadas' : 'guardadas'} {ago(fetchedAt)}{simulated ? ' · con el simulador la precisión baja lejos de esa fecha' : ''}.</p>
+      </Disclosure>
     </section>
   );
 }

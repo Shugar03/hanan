@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { Chip } from '../kit';
 import type { PointId, PassStatus, Salida } from '../../sky/types';
 import type { PointModel } from '../../model';
 import type { Tracked } from '../../sky/satellites';
@@ -84,7 +85,7 @@ function Choice({ label, value, options, onChange }: { label: string; value: str
       <legend>{label}</legend>
       <div className="choice-opts">
         {Object.entries(options).map(([k, v]) => (
-          <button type="button" key={k} className="opt" aria-pressed={value === k} onClick={() => onChange(k)}>{v}</button>
+          <Chip key={k} pressed={value === k} onClick={() => onChange(k)}>{v}</Chip>
         ))}
       </div>
     </fieldset>
@@ -98,7 +99,7 @@ function PlanCard({ plan: p, rank, todayStr, auto, done, onToggle, onOpenPoint, 
     <li className="card plan">
       <div className="card-head">
         <div>
-          <p className="plan-rank">Plan {rank}</p>
+          <p className="plan-rank"><span className="sr-only">Plan </span>{rank}</p>
           <h2 className="plan-title">{shortName(pt)} · {nightLabel(p.night, todayStr)}</h2>
           <p className="plan-when num">{windowText(p.window)}</p>
         </div>

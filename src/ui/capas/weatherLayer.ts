@@ -192,7 +192,8 @@ export function attachWeatherLayer(map: maplibregl.Map, grid: Grid): WeatherLaye
     parts = Array.from({ length: n }, () => { const p = spawn(); p.age = Math.random() * p.max; return p; });
   }
 
-  const ink = () => (modo === 'rojo' ? [255, 77, 77] : [248, 244, 236]);
+  // Partículas de viento: sal sobre el mapa oscuro; noche sobre el mapa claro (tema claro); rojo en modo rojo.
+  const ink = () => (modo === 'rojo' ? [255, 77, 77] : document.documentElement.dataset.tema === 'claro' ? [10, 11, 15] : [248, 244, 236]);
   const windOn = () => visible && variable === 'wind' && !destroyed;
 
   function frame() {

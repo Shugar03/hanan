@@ -3,7 +3,7 @@ import * as A from 'astronomy-engine';
 import sky from '../../data/catalog/sky.json';
 import { LMC, SGR_A, SMC } from '../../sky/ephemeris';
 import {
-  altAzToEnu, bodyAltAz, cameraBasis, eqjToEnu, limitingMag, mulVec, projectCam, raDecToVec, starRadius, toCam,
+  altAzToEnu, bodyAltAz, cameraBasis, eqjToEnu, limitingMag, mulVec, projectCam as projectStereo, raDecToVec, starRadius, toCam,
   type CamBasis, type Camera, type Pt, type Vec3,
 } from '../../sky/stars';
 
@@ -39,7 +39,7 @@ export function readColors(el: Element): Colors {
     bg: v('--bg'), surface: v('--surface'), border: v('--border'), text: v('--text'), text2: v('--text-2'),
     accent: v('--accent'), warm: v('--accent-warm'),
     font: cs.getPropertyValue('--font-texto').trim() || 'sans-serif',
-    red: document.documentElement.getAttribute('data-modo') === 'rojo',
+    red: el.closest('[data-modo="rojo"]') !== null,
   };
 }
 function parseColor(s: string): Rgb {
@@ -156,10 +156,55 @@ type Hit = { x: number; y: number; r: number; prio: number; pick: () => Picked }
 
 const ZC = -0.3; // plano de recorte detrás de la cámara
 
+/** Opciones de dibujo (todas opcionales; sin opciones el resultado es el del planetario). */
+export type DrawOptions = {
+  /** No pinta fondo, Vía Láctea ni suelo: para superponer sobre el video de la cámara (modo observatorio). */
+  transparentSky?: boolean;
+  /** Magnitud límite máxima (p. ej. 4,5 en AR para no saturar). */
+  maxMag?: number;
+  /** Giro de la pantalla respecto del "arriba" del cielo, en grados (positivo = horario). */
+  rollDeg?: number;
+  /** 'gnomonic' = proyección rectilínea, la de una cámara de foto. Por defecto, estereográfica. */
+  projection?: 'stereographic' | 'gnomonic';
+  /** Contorno oscuro en las etiquetas para leerlas sobre el video. */
+  labelHalo?: boolean;
+};
+
+// proyección activa del frame en curso (se fija al principio de draw)
+let GNOMONIC = false, GN_F = 1;
+function projectCam(b: CamBasis, X: number, Y: number, Z: number): [number, number] {
+  if (!GNOMONIC) return projectStereo(b, X, Y, Z);
+  const z = Math.max(Z, 0.02);
+  return [b.cx + (X / z) * GN_F, b.cy - (Y / z) * GN_F];
+}
+
+/** Objetos brillantes sobre el horizonte para alinear la brújula: Luna, planetas y estrellas de mag < maxMag. */
+export function brightTargets(sc: Scene, maxMag = 1, minAlt = 8): { name: string; sub: string; mag: number; altDeg: number; azDeg: number; v: Vec3 }[] {
+  const out: { name: string; sub: string; mag: number; altDeg: number; azDeg: number; v: Vec3 }[] = [];
+  if (sc.moon.altDeg > minAlt) out.push({ name: 'Luna', sub: sc.moon.phaseName, mag: sc.moon.mag, altDeg: sc.moon.altDeg, azDeg: sc.moon.azDeg, v: sc.moon.v });
+  for (const p of sc.planets) if (p.altDeg > minAlt && p.mag < 2) out.push({ name: p.name, sub: 'Planeta', mag: p.mag, altDeg: p.altDeg, azDeg: p.azDeg, v: p.v });
+  for (const [i, n] of NAMES) {
+    const mag = STARS[i][2];
+    if (mag >= maxMag) continue;
+    const v: Vec3 = [sc.star[i * 3], sc.star[i * 3 + 1], sc.star[i * 3 + 2]];
+    const alt = (Math.asin(v[2]) * 180) / Math.PI;
+    if (alt > minAlt) out.push({ name: n, sub: 'Estrella', mag, altDeg: alt, azDeg: az(v), v });
+  }
+  return out.sort((a, b) => a.mag - b.mag);
+}
+
 /** Dibuja un frame. Devuelve los blancos tocables. */
-export function draw(ctx: CanvasRenderingContext2D, sc: Scene, cam: Camera, col: Colors, selected: Vec3 | null): Hit[] {
+export function draw(ctx: CanvasRenderingContext2D, sc: Scene, cam: Camera, col: Colors, selected: Vec3 | null, opts: DrawOptions = {}): Hit[] {
   const W = cam.width, H = cam.height;
   const b = cameraBasis(cam);
+  const AR = !!opts.transparentSky;
+  GNOMONIC = opts.projection === 'gnomonic';
+  GN_F = Math.hypot(W, H) / 2 / Math.tan((cam.fovDeg * Math.PI) / 360);
+  if (opts.rollDeg) {
+    const ro = (opts.rollDeg * Math.PI) / 180, c = Math.cos(ro), s = Math.sin(ro), r = b.r, u = b.u;
+    b.r = [r[0] * c - u[0] * s, r[1] * c - u[1] * s, r[2] * c - u[2] * s];
+    b.u = [u[0] * c + r[0] * s, u[1] * c + r[1] * s, u[2] * c + r[2] * s];
+  }
   const hits: Hit[] = [];
   const labels: [number, number, number, number][] = [];
   const free = (x: number, y: number, w: number, h: number) => {
@@ -173,10 +218,10 @@ export function draw(ctx: CanvasRenderingContext2D, sc: Scene, cam: Camera, col:
   const sunAlt = sc.sun.altDeg;
   const day = smooth(-12, 3, sunAlt);
   const daySky = col.red ? mix(col.bg, col.border, 0.9) : mix(col.border, col.text2, 0.45);
-  ctx.fillStyle = rgba(mix(mix(col.bg, col.surface, 0.45), daySky, day));
-  ctx.fillRect(0, 0, W, H);
+  if (AR) ctx.clearRect(0, 0, W, H);
+  else { ctx.fillStyle = rgba(mix(mix(col.bg, col.surface, 0.45), daySky, day)); ctx.fillRect(0, 0, W, H); }
   const sunC = toCam(b, sc.sun.v);
-  if (sunAlt > -18 && sunC[2] > -0.15) {
+  if (!AR && sunAlt > -18 && sunC[2] > -0.15) {
     const [sx, sy] = projectCam(b, sunC[0], sunC[1], sunC[2]);
     const g = ctx.createRadialGradient(sx, sy, 0, sx, sy, b.scale * 2.4);
     const a = 0.38 * smooth(-18, -2, sunAlt) * (1 - 0.6 * smooth(5, 25, sunAlt));
@@ -186,7 +231,7 @@ export function draw(ctx: CanvasRenderingContext2D, sc: Scene, cam: Camera, col:
   const night = 1 - day;
 
   // ---- Vía Láctea: se dibuja a 1/4 de resolución y se escala (difuminado barato)
-  if (night > 0.05) {
+  if (!AR && night > 0.05) {
     const q = 4, mw = mwCanvas(Math.ceil(W / q), Math.ceil(H / q));
     const m = mw.getContext('2d')!;
     m.setTransform(1, 0, 0, 1, 0, 0); m.clearRect(0, 0, mw.width, mw.height);
@@ -248,7 +293,7 @@ export function draw(ctx: CanvasRenderingContext2D, sc: Scene, cam: Camera, col:
   }
 
   // ---- estrellas
-  const lim = limitingMag(sunAlt) + (cam.fovDeg < 60 ? 0.4 : 0);
+  const lim = Math.min(opts.maxMag ?? 99, limitingMag(sunAlt) + (cam.fovDeg < 60 ? 0.4 : 0));
   const S = sc.star;
   const baseStar = col.text;
   const warmStar = mix(col.text, col.warm, col.red ? 0.2 : 0.45);
@@ -344,7 +389,7 @@ export function draw(ctx: CanvasRenderingContext2D, sc: Scene, cam: Camera, col:
   }
 
   // ---- suelo y silueta
-  drawGround(ctx, b, sc, col, day);
+  if (AR) drawHorizonLine(ctx, b, col); else drawGround(ctx, b, sc, col, day);
 
   // ---- puntos cardinales
   const CARD = ['N', 'NE', 'E', 'SE', 'S', 'SO', 'O', 'NO'];
@@ -356,6 +401,7 @@ export function draw(ctx: CanvasRenderingContext2D, sc: Scene, cam: Camera, col:
     const main = i % 2 === 0;
     ctx.font = font(main ? 15 : 11, main ? 700 : 500);
     ctx.textAlign = 'center';
+    if (opts.labelHalo) { ctx.lineJoin = 'round'; ctx.lineWidth = 2.5; ctx.strokeStyle = rgba(col.bg, 0.5); ctx.strokeText(CARD[i], x, y + (main ? 26 : 22)); }
     ctx.fillStyle = main ? rgba(i === 0 ? col.accent : col.text) : rgba(col.text2);
     ctx.fillText(CARD[i], x, y + (main ? 26 : 22));
     ctx.fillStyle = rgba(main ? col.text : col.text2, 0.6);
@@ -413,7 +459,9 @@ export function draw(ctx: CanvasRenderingContext2D, sc: Scene, cam: Camera, col:
     if (align === 'left' && x + w > W - 4 && flipX !== undefined) { x = 2 * flipX - x; align = 'right'; }
     const x0 = align === 'center' ? x - w / 2 : align === 'right' ? x - w : x;
     if (!free(x0 - 2, y - 11, w + 4, 14) && !force) { (ctx as any).letterSpacing = '0px'; return; }
-    ctx.textAlign = align; ctx.fillStyle = color; ctx.fillText(text, x, y);
+    ctx.textAlign = align;
+    if (opts.labelHalo) { ctx.lineJoin = 'round'; ctx.lineWidth = 2.5; ctx.strokeStyle = rgba(col.bg, 0.5); ctx.strokeText(text, x, y); }
+    ctx.fillStyle = color; ctx.fillText(text, x, y);
     (ctx as CanvasRenderingContext2D & { letterSpacing?: string }).letterSpacing = '0px';
   }
 }
@@ -506,4 +554,20 @@ function drawGround(ctx: CanvasRenderingContext2D, b: CamBasis, sc: Scene, col: 
     pen = true;
   }
   ctx.stroke();
+}
+
+/** Horizonte matemático (altura 0°) como línea fina, para el modo observatorio. */
+function drawHorizonLine(ctx: CanvasRenderingContext2D, b: CamBasis, col: Colors) {
+  ctx.save();
+  ctx.strokeStyle = rgba(col.accent, 0.55); ctx.lineWidth = 1; ctx.setLineDash([6, 6]);
+  ctx.beginPath();
+  let pen = false;
+  for (let a = 0; a <= 360; a += 1) {
+    const c = toCam(b, altAzToEnu(0, a));
+    if (c[2] < 0.05) { pen = false; continue; }
+    const [x, y] = projectCam(b, c[0], c[1], c[2]);
+    if (pen) ctx.lineTo(x, y); else ctx.moveTo(x, y);
+    pen = true;
+  }
+  ctx.stroke(); ctx.restore();
 }

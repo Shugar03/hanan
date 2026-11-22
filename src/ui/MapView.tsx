@@ -44,23 +44,31 @@ const RN52: [number, number][] = [
 
 const cssVar = (n: string) => getComputedStyle(document.documentElement).getPropertyValue(n).trim() || 'black';
 
-const style = (): StyleSpecification => ({
+/** Teselas Esri sin key. Tema claro: World Light Gray Base + World Hillshade. Oscuro y modo rojo: Dark Gray + Hillshade Dark. */
+const ESRI = 'https://server.arcgisonline.com/ArcGIS/rest/services/';
+const tilesFor = (light: boolean) => ({
+  relieve: [`${ESRI}Elevation/${light ? 'World_Hillshade' : 'World_Hillshade_Dark'}/MapServer/tile/{z}/{y}/{x}`],
+  base: [`${ESRI}Canvas/${light ? 'World_Light_Gray_Base' : 'World_Dark_Gray_Base'}/MapServer/tile/{z}/{y}/{x}`],
+});
+const isLight = () => document.documentElement.dataset.tema === 'claro' && document.documentElement.dataset.modo !== 'rojo';
+
+const style = (light = isLight()): StyleSpecification => ({
   version: 8,
   sources: {
     relieve: {
       type: 'raster', tileSize: 256, maxzoom: 13,
-      tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade_Dark/MapServer/tile/{z}/{y}/{x}'],
+      tiles: tilesFor(light).relieve,
       attribution: 'Relieve y base: Esri · © OpenStreetMap',
     },
     base: {
       type: 'raster', tileSize: 256, maxzoom: 16,
-      tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}'],
+      tiles: tilesFor(light).base,
     },
   },
   layers: [
     { id: 'bg', type: 'background', paint: { 'background-color': cssVar('--bg') } },
-    { id: 'base', type: 'raster', source: 'base', paint: { 'raster-opacity': 0.55 } },
-    { id: 'relieve', type: 'raster', source: 'relieve', paint: { 'raster-opacity': 0.7 } },
+    { id: 'base', type: 'raster', source: 'base', paint: { 'raster-opacity': light ? 0.8 : 0.55 } },
+    { id: 'relieve', type: 'raster', source: 'relieve', paint: { 'raster-opacity': light ? 0.45 : 0.7 } },
   ],
 });
 
@@ -70,21 +78,25 @@ type Props = {
   onSelect: (id: PointId) => void;
   sats: SatMarker[];
   modo: string;
+  /** Tema de la interfaz: el mapa base pasa a gris claro en tema claro (salvo en modo rojo). */
+  tema?: string;
   /** Expone la instancia del mapa (capas meteorológicas). */
   onMap?: (m: MLMap | null) => void;
 };
 
-export function MapView({ models, selected, onSelect, sats, modo, onMap }: Props) {
+export function MapView({ models, selected, onSelect, sats, modo, tema, onMap }: Props) {
   const box = useRef<HTMLDivElement>(null);
   const map = useRef<MLMap | null>(null);
   const markers = useRef<Map<string, { m: Marker; el: HTMLButtonElement }>>(new Map());
   const satMarkers = useRef<Map<string, Marker>>(new Map());
   const [failed, setFailed] = useState(false);
+  const tilesLight = useRef<boolean | null>(null);
 
   useEffect(() => {
     if (!box.current) return;
     let m: MLMap;
     try {
+      tilesLight.current = isLight();
       m = new MLMap({ container: box.current, style: style(), attributionControl: { compact: true }, dragRotate: false, pitchWithRotate: false });
     } catch { setFailed(true); return; }
     map.current = m;
@@ -161,11 +173,22 @@ export function MapView({ models, selected, onSelect, sats, modo, onMap }: Props
   useEffect(() => {
     const m = map.current; if (!m) return;
     const apply = () => {
+      const light = isLight(), t = tilesFor(light);
+      // Solo recargar teselas si cambió la familia (claro ↔ oscuro): evita un parpadeo al montar.
+      if (tilesLight.current !== light) {
+        tilesLight.current = light;
+        for (const id of ['base', 'relieve'] as const) {
+          const src = m.getSource(id) as unknown as { setTiles?: (x: string[]) => void } | undefined;
+          src?.setTiles?.(t[id]);
+        }
+      }
+      if (m.getLayer('base')) m.setPaintProperty('base', 'raster-opacity', light ? 0.8 : 0.55);
+      if (m.getLayer('relieve')) m.setPaintProperty('relieve', 'raster-opacity', light ? 0.45 : 0.7);
       if (m.getLayer('bg')) m.setPaintProperty('bg', 'background-color', cssVar('--bg'));
       if (m.getLayer('rn52')) m.setPaintProperty('rn52', 'line-color', cssVar('--text-2'));
     };
     if (m.isStyleLoaded()) apply(); else m.once('load', apply);
-  }, [modo]);
+  }, [modo, tema]);
 
   return (
     <div className="map" ref={box} role="region" aria-label="Mapa de la Ruta Jujeña de las Estrellas (RN 52)">

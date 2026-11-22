@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { BadgeCheck } from 'lucide-react';
 import { labelFor, toneFor } from '../../sky/score';
 import { hhmm, localParts, localNoon, longDate } from '../../sky/time';
 import { pointById, shortName } from '../../data/points';
@@ -41,7 +42,7 @@ export function VerifiedBadge({ g }: { g?: Guide }) {
   const txt = g.kind === 'operador' ? (ok ? 'Legajo 18.829' : 'Sin legajo') : (ok ? 'Registrado' : 'Sin verificar');
   return (
     <span className="sx-verif" data-ok={ok} title={ok ? 'Verificado' : 'Sin verificar'}>
-      {ok && <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden><path d="M2.5 6.2 5 8.5l4.5-5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>}
+      {ok && <BadgeCheck size={14} strokeWidth={1.75} aria-hidden />}
       {txt}
     </span>
   );

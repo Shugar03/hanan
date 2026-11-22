@@ -70,7 +70,7 @@
   color: var(--text);
   cursor: pointer;
 }
-.capas-play svg { fill: currentColor; }
+.capas-play svg { flex: none; }
 .capas-play[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
 
 .capas-scrub { position: relative; padding-bottom: 16px; min-width: 0; }
@@ -195,7 +195,7 @@
   .capas-legend-line-title { font-weight: 600; }
   .capas-legend-line-end { color: var(--text-2); font-variant-numeric: tabular-nums; white-space: nowrap; }
   .capas-bar-line { flex: 1; height: 6px; display: block; }
-  .capas-legend-chev { flex: none; fill: none; stroke: currentColor; stroke-width: 2; transform: rotate(180deg); }
+  .capas-legend-chev { flex: none; transform: rotate(180deg); }
   .capas-legend-line[aria-expanded="true"] .capas-legend-chev { transform: none; }
   .capas-legend { order: -2; display: none; padding: var(--space-2) var(--space-1) 0; }
   .capas-legend[data-open="true"] { display: grid; }

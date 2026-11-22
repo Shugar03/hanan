@@ -1,3 +1,5 @@
+import { ChevronUp, Pause, Play } from 'lucide-react';
+import { ICON } from '../kit';
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import type { GridVar } from '../../data/grid';
 import { GRID_ATTRIBUTION } from '../../data/grid';
@@ -98,8 +100,8 @@ export default function CapasControls({ variable, onVariable, time, onTime, hour
             <button type="button" className="capas-play" aria-label={isPlaying ? 'Pausar animación' : 'Reproducir animación hora por hora'}
               aria-pressed={isPlaying} onClick={() => setPlaying(!isPlaying)}>
               {isPlaying
-                ? <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1" /><rect x="14" y="5" width="4" height="14" rx="1" /></svg>
-                : <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z" /></svg>}
+                ? <Pause {...ICON} size={18} />
+                : <Play {...ICON} size={18} />}
             </button>
             <div className="capas-scrub">
               <input type="range" min={0} max={Math.max(0, hours.length - 1)} step={1} value={idx}
@@ -124,7 +126,7 @@ export default function CapasControls({ variable, onVariable, time, onTime, hour
             <span className="capas-bar capas-bar-line" style={{ background: legendGradient(variable, modo) }} role="img"
               aria-label={`Escala de ${ramp.title}: de ${ramp.min} a ${ramp.max} ${ramp.unit}`} />
             <span className="capas-legend-line-end">{variable === 'score' ? 'Excelente' : `${ramp.max} ${ramp.unit}`}</span>
-            <svg className="capas-legend-chev" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="m6 15 6-6 6 6" /></svg>
+            <ChevronUp {...ICON} size={16} className="capas-legend-chev" />
             <span className="capas-sr">{legendOpen ? 'Ocultar leyenda' : 'Ver leyenda completa'}</span>
           </button>
 

@@ -1,4 +1,6 @@
 import { useMemo, useState } from 'react';
+import { ChevronLeft } from 'lucide-react';
+import { ICON } from '../kit';
 import { astroNight } from '../../sky/ephemeris';
 import { hhmm } from '../../sky/time';
 import { pointById } from '../../data/points';
@@ -31,7 +33,7 @@ export function SalidaDetail({ id, nightScore, onBack, nightWindow, now = new Da
   if (!s || !p) {
     return (
       <section className="sx">
-        <button type="button" className="sx-back" onClick={onBack} aria-label="Volver a salidas">‹ Salidas</button>
+        <button type="button" className="sx-back" onClick={onBack} aria-label="Volver a salidas"><ChevronLeft {...ICON} size={18} />Salidas</button>
         <p className="sx-empty">No encontramos esa salida.</p>
       </section>
     );
@@ -48,7 +50,7 @@ export function SalidaDetail({ id, nightScore, onBack, nightWindow, now = new Da
 
   return (
     <article className="sx sx-detail" aria-labelledby="sx-d-title">
-      <button type="button" className="sx-back" onClick={onBack} aria-label="Volver a salidas">‹ Salidas</button>
+      <button type="button" className="sx-back" onClick={onBack} aria-label="Volver a salidas"><ChevronLeft {...ICON} size={18} />Salidas</button>
 
       <header className="sx-hero">
         <p className="sx-hero-kicker">{p.name}{s.demo && <DemoTag />}</p>
