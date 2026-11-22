@@ -1,0 +1,15 @@
+{
+  "name": "hanan-e2e",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:mobile": "playwright test --project=mobile",
+    "test:desktop": "playwright test --project=desktop",
+    "report": "playwright show-report report"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.65.1"
+  }
+}

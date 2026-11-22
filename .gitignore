@@ -4,3 +4,5 @@ dist/
 .env*
 .playwright-mcp/
 /*.png
+e2e/report/
+e2e/test-results/

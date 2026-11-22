@@ -23,34 +23,39 @@ Estilo **minimalista premium**: una sola familia tipográfica, color plano, supe
 
 ## 3. Isotipo: el cardón-constelación
 
-Un cardón (*Leucostele atacamensis*, ex *Trichocereus*) dibujado como un diagrama de constelación: solo estrellas (puntos) y trazos finos, sin contorno ni relleno de la planta. A 24 px se lee como cardón; de cerca, como constelación.
+Un cardón (*Leucostele atacamensis*, ex *Trichocereus*) dibujado como una constelación: las **estrellas marcan los vértices del contorno** del cactus y un trazo fino recorre ese contorno. Como el tronco y los brazos tienen ancho real y cimas redondeadas, se lee el volumen del cactus: a primera vista es un cardón; de cerca, una constelación.
+
+**Por qué esta versión.** Se exploraron tres variantes: silueta-constelación, costillas y silueta rellena más esqueleto (hoja de variantes en el repo de trabajo, no publicada). Se eligió la silueta-constelación porque es la única que se lee inequívocamente como cardón a 48 y a 24 px sin depender de un relleno de bajo contraste. Además sigue siendo solo estrellas y trazos. El esqueleto de una sola línea se leía como "una línea con puntos", tenedor o "4".
 
 **Construcción** (grilla de 48 × 48 u; coordenadas x, y desde arriba a la izquierda):
 
-| Estrella | Posición | Radio | Rol |
-|---|---|---|---|
-| Base | 24, 43,5 | 1,7 | Pie del tronco |
-| Nace brazo izquierdo | 24, 32 | 2,0 | Nodo del tronco |
-| Nace brazo derecho | 24, 22 | 2,0 | Nodo del tronco |
-| Intermedio del tronco | 24, 13 | 1,7 | Nodo del tronco |
-| **Punta del tronco** | 24, 4 | **3,1** | **Estrella destacada, en naranja** |
-| Codo izquierdo | 13, 32 | 1,7 | Codo del brazo |
-| Punta izquierda | 13, 18 | 2,4 | Brazo |
-| Codo derecho | 35, 22 | 1,7 | Codo del brazo |
-| Punta derecha | 35, 11 | 2,4 | Brazo |
-| Estrellas de campo | 42,5, 4 · 5,5, 7 | 0,9 · 0,8 | Sueltas, opacidad 70 % |
+- **Contorno:** tronco de 8 u de ancho (x 20–28), del pie en y = 44 a la cima en y = 5, con cima semicircular (r 4). Brazos de 6 u de ancho: salen horizontales del tronco (el izquierdo entre y 30–36, el derecho entre y 21–27), giran con un codo exterior redondeado (arco de 90°, r 6) y suben en vertical, paralelos al tronco, con cima semicircular (r 3). Las cimas de los brazos (y = 16 e y = 12) quedan por debajo de la cima del tronco.
+- **Trazado SVG del contorno:** `M20 44 V36 H15 A6 6 0 0 1 9 30 V19 A3 3 0 0 1 15 19 V30 H20 V9 A4 4 0 0 1 28 9 V21 H33 V15 A3 3 0 0 1 39 15 V21 A6 6 0 0 1 33 27 H28 V44 Z`. Solo hay tramos horizontales, verticales y arcos, sin diagonales.
+- **Trazo:** 1,5 u, extremos redondeados, en `ceniza`. Una máscara lo corta 0,9 u alrededor de cada estrella, como en las cartas celestes.
 
-- **9 estrellas unidas por 8 trazos** + 2 estrellas sueltas de campo (11 en total).
-- **Solo trazos horizontales y verticales, cero diagonales:** es lo que da la lectura de candelabro. Los brazos salen del tronco en horizontal a alturas distintas (el izquierdo más abajo, en y = 32; el derecho en y = 22), hacen un codo marcado y suben en vertical, paralelos al tronco. Las puntas de los brazos (y = 18 e y = 11) quedan por debajo de la punta del tronco (y = 4), como en un cardón (*Leucostele atacamensis*) real.
-- **Trazos:** 1,4 u, extremos redondeados, con un aire de 0,8 u entre el trazo y cada estrella (como en las cartas celestes).
-- **Horizonte:** línea de 1 u en y = 46,5, de x = 8 a x = 40, al 45 % de opacidad. Es el altiplano; es opcional en aplicaciones muy chicas.
-- Tres tamaños de estrella marcan la jerarquía: la mayor (3,1 u, naranja), las puntas de los brazos (2,4 u) y los nodos (1,7–2,0 u).
+| Estrella | Posición | Radio |
+|---|---|---|
+| **Cima del tronco** | 24, 5 | **2,8 · naranja** |
+| Cima brazo izquierdo | 12, 16 | 2,0 |
+| Cima brazo derecho | 36, 12 | 2,0 |
+| Codo exterior izquierdo (mitad del arco) | 10,76, 34,24 | 1,4 |
+| Codo exterior derecho (mitad del arco) | 37,24, 25,24 | 1,4 |
+| Axila interna izquierda | 15, 30 | 1,1 |
+| Axila interna derecha | 33, 21 | 1,1 |
+| Flanco del tronco, izquierdo | 20, 17 | 1,2 |
+| Flanco del tronco, derecho | 28, 34 | 1,2 |
+| Pie | 20, 44 · 28, 44 | 1,4 |
+| Estrellas de campo (sueltas) | 42,5, 4 · 5,5, 7 | 0,9 · 0,8, opacidad 70 % |
+
+- **11 estrellas en el contorno + 2 de campo** (13 en total), en cuatro tamaños: la mayor en naranja (2,8), las cimas de los brazos (2,0), codos y pie (1,4) y los puntos de apoyo (1,1–1,2).
+- **Horizonte:** línea de 1 u en y = 46,5, de x = 6 a x = 42, al 45 % de opacidad. Es opcional en aplicaciones muy chicas.
 
 **Reglas**
 - Tamaño mínimo: **24 px** de alto (isotipo) y **120 px** de ancho (lockup).
 - Margen de seguridad: 4 u alrededor (1/12 del lado).
 - Solo sobre fondos oscuros (`noche`, `noche-2`, negro) o sobre `naranja` en la versión de ícono de app.
-- No rotar, no deformar, no sumar contornos, sombras, brillos ni gradientes. No cambiar de lugar la estrella naranja.
+- No rotar, no deformar, no rellenar la silueta, no sumar sombras, brillos ni gradientes. No cambiar de lugar la estrella naranja.
+- Si se incrusta el SVG inline varias veces en una misma página, darle a cada copia un `id` de máscara único (por ejemplo `hanan-ml-1`, `hanan-ml-2`).
 
 **Versiones**
 

@@ -1,0 +1,15 @@
+{
+  "name": "Hanan · cielos de la Puna",
+  "short_name": "Hanan",
+  "description": "El mejor cielo de la Puna jujeña, hora por hora, y los guías que salen esa noche.",
+  "lang": "es-AR",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0B0F1E",
+  "theme_color": "#0B0F1E",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

@@ -119,7 +119,9 @@ viento    = ráfagas > 50 km/h ? 0,6 : 1
 score     = round(100 · oscuridad · nubes · luna · humedad · viento)
 ```
 
-Etiquetas: ≥ 85 "Excelente", 70–84 "Muy bueno", 40–69 "Aceptable", 1–39 "Malo", 0 "Día".
+Etiquetas: ≥ 85 "Excelente", 70–84 "Muy bueno", 40–69 "Aceptable", 0–39 "Malo"; "Día" solo cuando oscuridad = 0 (una hora de noche con score 0 es "Malo").
+
+**Score de la noche:** el score medio de la mejor ventana de esa noche (si ninguna hora llega a 40, el pico horario, rotulado). Es la única métrica por noche: chips de día, pines del mapa, mejor ventana, señales de demanda, alertas y salidas. Un pico horario solo se muestra rotulado ("pico 86 a las 05:00"). Las ventanas se recortan al crepúsculo astronómico.
 Colores: `score-bueno` ≥ 70, `score-medio` 40–69, `score-malo` < 40 (ver [`../brand/brand-guide.md`](../brand/brand-guide.md)).
 
 **Mejor ventana:** la secuencia continua de horas con score ≥ 40 que maximiza el promedio × la duración (desempate: la más temprana).
@@ -128,7 +130,7 @@ Colores: `score-bueno` ≥ 70, `score-medio` 40–69, `score-malo` < 40 (ver [`.
 | Caso | Entrada | Esperado |
 |---|---|---|
 | T1 | 22/11 a las 20:00 (sol −1,8°) | oscuridad = 0 → score 0 |
-| T2 | 22/11 a las 22:00: sol −25,6°, nubes 0/0/0, luna a 40,7° y 96 % | factor luna ≈ 0,37 → score ≈ 37 (Malo, por la luna) |
+| T2 | 22/11 a las 22:00: sol −25,6°, nubes 0/0/0, luna a 40,7° y 96 %, ráfagas 51,5 km/h (fixture) | factor luna ≈ 0,37 y viento 0,6 → score ≈ 22 (Malo). Con viento en calma el mismo caso da ≈ 37 |
 | T3 | Hora con nubes altas 53 % y luna bajo el horizonte | nubes = 0,894; score ≈ 89 si el resto es 1 |
 | T4 | HR 90 % | factor humedad 0,5 |
 | T5 | Ráfagas 60 km/h | factor viento 0,6 |
