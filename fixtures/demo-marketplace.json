@@ -1,0 +1,527 @@
+{
+ "_nota": "Datos de ejemplo (demo). Perfiles ficticios, precios de ejemplo en ARS. No usar nombres ni teléfonos reales sin consentimiento.",
+ "guides": [
+  {
+   "id": "g-ana",
+   "name": "Guía demo · Ana",
+   "initials": "AN",
+   "kind": "guia",
+   "registeredLey6308": true,
+   "legajo18829": false,
+   "languages": [
+    "es",
+    "en"
+   ],
+   "ratingDemo": 4.9,
+   "salidasCount": 48,
+   "base": "Susques",
+   "whatsapp": "5493880000001",
+   "bio": "Perfil ficticio de ejemplo. Guía de cielo profundo con telescopio en Susques.",
+   "demo": true
+  },
+  {
+   "id": "g-ramiro",
+   "name": "Guía demo · Ramiro",
+   "initials": "RA",
+   "kind": "guia",
+   "registeredLey6308": true,
+   "legajo18829": false,
+   "languages": [
+    "es",
+    "en",
+    "pt"
+   ],
+   "ratingDemo": 4.8,
+   "salidasCount": 31,
+   "base": "Susques",
+   "whatsapp": "5493880000003",
+   "bio": "Perfil ficticio de ejemplo. Salidas de altura a Olaroz Chico y Jama.",
+   "demo": true
+  },
+  {
+   "id": "g-lucia",
+   "name": "Guía demo · Lucía",
+   "initials": "LU",
+   "kind": "guia",
+   "registeredLey6308": false,
+   "legajo18829": false,
+   "languages": [
+    "es",
+    "pt"
+   ],
+   "ratingDemo": 4.6,
+   "salidasCount": 12,
+   "base": "Purmamarca",
+   "whatsapp": "5493880000004",
+   "bio": "Perfil ficticio de ejemplo. Observación a simple vista para quienes empiezan.",
+   "demo": true
+  },
+  {
+   "id": "g-mateo",
+   "name": "Guía demo · Mateo",
+   "initials": "MA",
+   "kind": "guia",
+   "registeredLey6308": false,
+   "legajo18829": false,
+   "languages": [
+    "es"
+   ],
+   "ratingDemo": 4.4,
+   "salidasCount": 6,
+   "base": "Tilcara",
+   "whatsapp": "5493880000006",
+   "bio": "Perfil ficticio de ejemplo. Salidas cortas desde Tilcara.",
+   "demo": true
+  },
+  {
+   "id": "g-puna-noche",
+   "name": "Operador demo · Puna Noche",
+   "initials": "PN",
+   "kind": "operador",
+   "registeredLey6308": false,
+   "legajo18829": true,
+   "languages": [
+    "es",
+    "en"
+   ],
+   "ratingDemo": 4.7,
+   "salidasCount": 120,
+   "base": "Purmamarca",
+   "whatsapp": "5493880000002",
+   "bio": "Operador ficticio de ejemplo con guías propios y traslado desde Purmamarca.",
+   "demo": true
+  }
+ ],
+ "salidas": [
+  {
+   "id": "mk-01",
+   "title": "Cielo profundo en el COAS",
+   "guideId": "g-ana",
+   "pointId": "susques",
+   "departure": "2026-11-22T21:30:00-03:00",
+   "durationH": 3,
+   "capacityMin": 4,
+   "capacityMax": 12,
+   "booked": 7,
+   "pricePerPersonARS": 55000,
+   "demoPrice": true,
+   "includes": [
+    "Telescopio",
+    "Bebida caliente",
+    "Ponchos y mantas"
+   ],
+   "meetingPoint": "Susques",
+   "physicalLevel": "bajo",
+   "maxAltitudeM": 3605,
+   "languages": [
+    "es",
+    "en"
+   ],
+   "weatherPolicy": "Garantía de cielo: si a 6 h de la salida el score de la noche es menor a 40, la salida pasa a reprogramación sugerida y elegís otra fecha o el reintegro de la seña.",
+   "demo": true
+  },
+  {
+   "id": "mk-02",
+   "title": "Salinas Grandes bajo la Vía Láctea",
+   "guideId": "g-puna-noche",
+   "pointId": "salinas",
+   "departure": "2026-11-22T22:00:00-03:00",
+   "durationH": 3.5,
+   "capacityMin": 6,
+   "capacityMax": 20,
+   "booked": 14,
+   "pricePerPersonARS": 75000,
+   "demoPrice": true,
+   "includes": [
+    "Traslado ida y vuelta",
+    "Telescopio",
+    "Bebida caliente"
+   ],
+   "meetingPoint": "Purmamarca",
+   "physicalLevel": "bajo",
+   "maxAltitudeM": 4170,
+   "languages": [
+    "es",
+    "en"
+   ],
+   "weatherPolicy": "Garantía de cielo: si a 6 h de la salida el score de la noche es menor a 40, la salida pasa a reprogramación sugerida y elegís otra fecha o el reintegro de la seña.",
+   "demo": true
+  },
+  {
+   "id": "mk-03",
+   "title": "El cielo a simple vista en Purmamarca",
+   "guideId": "g-lucia",
+   "pointId": "purmamarca",
+   "departure": "2026-11-23T21:00:00-03:00",
+   "durationH": 2.5,
+   "capacityMin": 2,
+   "capacityMax": 15,
+   "booked": 3,
+   "pricePerPersonARS": 30000,
+   "demoPrice": true,
+   "includes": [
+    "Bebida caliente",
+    "Carta celeste impresa"
+   ],
+   "meetingPoint": "Purmamarca",
+   "physicalLevel": "bajo",
+   "maxAltitudeM": 2400,
+   "languages": [
+    "es",
+    "pt"
+   ],
+   "weatherPolicy": "Garantía de cielo: si a 6 h de la salida el score de la noche es menor a 40, la salida pasa a reprogramación sugerida y elegís otra fecha o el reintegro de la seña.",
+   "demo": true
+  },
+  {
+   "id": "mk-04",
+   "title": "Noche de observatorio en Olaroz Chico",
+   "guideId": "g-ramiro",
+   "pointId": "olaroz",
+   "departure": "2026-11-23T22:30:00-03:00",
+   "durationH": 4,
+   "capacityMin": 4,
+   "capacityMax": 8,
+   "booked": 6,
+   "pricePerPersonARS": 120000,
+   "demoPrice": true,
+   "includes": [
+    "Traslado desde Susques",
+    "Telescopio",
+    "Bebida caliente",
+    "Cena liviana"
+   ],
+   "meetingPoint": "Susques",
+   "physicalLevel": "medio",
+   "maxAltitudeM": 4172,
+   "languages": [
+    "es",
+    "en",
+    "pt"
+   ],
+   "weatherPolicy": "Garantía de cielo: si a 6 h de la salida el score de la noche es menor a 40, la salida pasa a reprogramación sugerida y elegís otra fecha o el reintegro de la seña.",
+   "demo": true
+  },
+  {
+   "id": "mk-05",
+   "title": "Primeros pasos con el cielo en Tilcara",
+   "guideId": "g-mateo",
+   "pointId": "tilcara",
+   "departure": "2026-11-24T21:30:00-03:00",
+   "durationH": 2,
+   "capacityMin": 2,
+   "capacityMax": 10,
+   "booked": 2,
+   "pricePerPersonARS": 25000,
+   "demoPrice": true,
+   "includes": [
+    "Bebida caliente",
+    "Puntero láser"
+   ],
+   "meetingPoint": "Tilcara",
+   "physicalLevel": "bajo",
+   "maxAltitudeM": 2500,
+   "languages": [
+    "es"
+   ],
+   "weatherPolicy": "Garantía de cielo: si a 6 h de la salida el score de la noche es menor a 40, la salida pasa a reprogramación sugerida y elegís otra fecha o el reintegro de la seña.",
+   "demo": true
+  },
+  {
+   "id": "mk-06",
+   "title": "Cúmulos y nebulosas con telescopio",
+   "guideId": "g-ana",
+   "pointId": "susques",
+   "departure": "2026-11-24T22:00:00-03:00",
+   "durationH": 3,
+   "capacityMin": 4,
+   "capacityMax": 12,
+   "booked": 12,
+   "pricePerPersonARS": 55000,
+   "demoPrice": true,
+   "includes": [
+    "Telescopio",
+    "Bebida caliente",
+    "Ponchos y mantas"
+   ],
+   "meetingPoint": "Susques",
+   "physicalLevel": "bajo",
+   "maxAltitudeM": 3605,
+   "languages": [
+    "es",
+    "en"
+   ],
+   "weatherPolicy": "Garantía de cielo: si a 6 h de la salida el score de la noche es menor a 40, la salida pasa a reprogramación sugerida y elegís otra fecha o el reintegro de la seña.",
+   "demo": true
+  },
+  {
+   "id": "mk-07",
+   "title": "Salinas Grandes bajo la Vía Láctea",
+   "guideId": "g-puna-noche",
+   "pointId": "salinas",
+   "departure": "2026-11-25T21:00:00-03:00",
+   "durationH": 3.5,
+   "capacityMin": 6,
+   "capacityMax": 20,
+   "booked": 9,
+   "pricePerPersonARS": 75000,
+   "demoPrice": true,
+   "includes": [
+    "Traslado ida y vuelta",
+    "Telescopio",
+    "Bebida caliente"
+   ],
+   "meetingPoint": "Purmamarca",
+   "physicalLevel": "bajo",
+   "maxAltitudeM": 4170,
+   "languages": [
+    "es",
+    "en"
+   ],
+   "weatherPolicy": "Garantía de cielo: si a 6 h de la salida el score de la noche es menor a 40, la salida pasa a reprogramación sugerida y elegís otra fecha o el reintegro de la seña.",
+   "demo": true
+  },
+  {
+   "id": "mk-08",
+   "title": "Jama: el cielo más alto de la ruta",
+   "guideId": "g-ramiro",
+   "pointId": "jama",
+   "departure": "2026-11-25T23:00:00-03:00",
+   "durationH": 4,
+   "capacityMin": 4,
+   "capacityMax": 8,
+   "booked": 1,
+   "pricePerPersonARS": 140000,
+   "demoPrice": true,
+   "includes": [
+    "Traslado desde Susques",
+    "Telescopio",
+    "Bebida caliente",
+    "Oxímetro y botiquín"
+   ],
+   "meetingPoint": "Susques",
+   "physicalLevel": "exigente",
+   "maxAltitudeM": 4200,
+   "languages": [
+    "es",
+    "en"
+   ],
+   "weatherPolicy": "Garantía de cielo: si a 6 h de la salida el score de la noche es menor a 40, la salida pasa a reprogramación sugerida y elegís otra fecha o el reintegro de la seña.",
+   "demo": true
+  },
+  {
+   "id": "mk-09",
+   "title": "El cielo a simple vista en Purmamarca",
+   "guideId": "g-lucia",
+   "pointId": "purmamarca",
+   "departure": "2026-11-26T21:30:00-03:00",
+   "durationH": 2.5,
+   "capacityMin": 2,
+   "capacityMax": 15,
+   "booked": 5,
+   "pricePerPersonARS": 30000,
+   "demoPrice": true,
+   "includes": [
+    "Bebida caliente",
+    "Carta celeste impresa"
+   ],
+   "meetingPoint": "Purmamarca",
+   "physicalLevel": "bajo",
+   "maxAltitudeM": 2400,
+   "languages": [
+    "es",
+    "pt"
+   ],
+   "weatherPolicy": "Garantía de cielo: si a 6 h de la salida el score de la noche es menor a 40, la salida pasa a reprogramación sugerida y elegís otra fecha o el reintegro de la seña.",
+   "demo": true
+  },
+  {
+   "id": "mk-10",
+   "title": "Astrofotografía en Olaroz Chico",
+   "guideId": "g-ramiro",
+   "pointId": "olaroz",
+   "departure": "2026-11-26T22:30:00-03:00",
+   "durationH": 4,
+   "capacityMin": 3,
+   "capacityMax": 6,
+   "booked": 2,
+   "pricePerPersonARS": 130000,
+   "demoPrice": true,
+   "includes": [
+    "Traslado desde Susques",
+    "Trípode y cámara compartida",
+    "Bebida caliente"
+   ],
+   "meetingPoint": "Susques",
+   "physicalLevel": "medio",
+   "maxAltitudeM": 4172,
+   "languages": [
+    "es",
+    "en",
+    "pt"
+   ],
+   "weatherPolicy": "Garantía de cielo: si a 6 h de la salida el score de la noche es menor a 40, la salida pasa a reprogramación sugerida y elegís otra fecha o el reintegro de la seña.",
+   "demo": true
+  },
+  {
+   "id": "mk-11",
+   "title": "Cielo profundo en el COAS",
+   "guideId": "g-ana",
+   "pointId": "susques",
+   "departure": "2026-11-27T21:30:00-03:00",
+   "durationH": 3,
+   "capacityMin": 4,
+   "capacityMax": 12,
+   "booked": 4,
+   "pricePerPersonARS": 55000,
+   "demoPrice": true,
+   "includes": [
+    "Telescopio",
+    "Bebida caliente",
+    "Ponchos y mantas"
+   ],
+   "meetingPoint": "Susques",
+   "physicalLevel": "bajo",
+   "maxAltitudeM": 3605,
+   "languages": [
+    "es",
+    "en"
+   ],
+   "weatherPolicy": "Garantía de cielo: si a 6 h de la salida el score de la noche es menor a 40, la salida pasa a reprogramación sugerida y elegís otra fecha o el reintegro de la seña.",
+   "demo": true
+  },
+  {
+   "id": "mk-12",
+   "title": "Primeros pasos con el cielo en Tilcara",
+   "guideId": "g-mateo",
+   "pointId": "tilcara",
+   "departure": "2026-11-27T22:00:00-03:00",
+   "durationH": 2,
+   "capacityMin": 2,
+   "capacityMax": 10,
+   "booked": 0,
+   "pricePerPersonARS": 25000,
+   "demoPrice": true,
+   "includes": [
+    "Bebida caliente",
+    "Puntero láser"
+   ],
+   "meetingPoint": "Tilcara",
+   "physicalLevel": "bajo",
+   "maxAltitudeM": 2500,
+   "languages": [
+    "es"
+   ],
+   "weatherPolicy": "Garantía de cielo: si a 6 h de la salida el score de la noche es menor a 40, la salida pasa a reprogramación sugerida y elegís otra fecha o el reintegro de la seña.",
+   "demo": true
+  },
+  {
+   "id": "mk-13",
+   "title": "Salinas Grandes bajo la Vía Láctea",
+   "guideId": "g-puna-noche",
+   "pointId": "salinas",
+   "departure": "2026-11-28T21:00:00-03:00",
+   "durationH": 3.5,
+   "capacityMin": 6,
+   "capacityMax": 20,
+   "booked": 16,
+   "pricePerPersonARS": 80000,
+   "demoPrice": true,
+   "includes": [
+    "Traslado ida y vuelta",
+    "Telescopio",
+    "Bebida caliente"
+   ],
+   "meetingPoint": "Purmamarca",
+   "physicalLevel": "bajo",
+   "maxAltitudeM": 4170,
+   "languages": [
+    "es",
+    "en"
+   ],
+   "weatherPolicy": "Garantía de cielo: si a 6 h de la salida el score de la noche es menor a 40, la salida pasa a reprogramación sugerida y elegís otra fecha o el reintegro de la seña.",
+   "demo": true
+  },
+  {
+   "id": "mk-14",
+   "title": "Jama con telescopio",
+   "guideId": "g-ana",
+   "pointId": "jama",
+   "departure": "2026-11-28T22:30:00-03:00",
+   "durationH": 4,
+   "capacityMin": 4,
+   "capacityMax": 8,
+   "booked": 3,
+   "pricePerPersonARS": 140000,
+   "demoPrice": true,
+   "includes": [
+    "Traslado desde Susques",
+    "Telescopio",
+    "Bebida caliente",
+    "Oxímetro y botiquín"
+   ],
+   "meetingPoint": "Susques",
+   "physicalLevel": "exigente",
+   "maxAltitudeM": 4200,
+   "languages": [
+    "es",
+    "en"
+   ],
+   "weatherPolicy": "Garantía de cielo: si a 6 h de la salida el score de la noche es menor a 40, la salida pasa a reprogramación sugerida y elegís otra fecha o el reintegro de la seña.",
+   "demo": true
+  },
+  {
+   "id": "mk-15",
+   "title": "Cielo de domingo en Purmamarca",
+   "guideId": "g-puna-noche",
+   "pointId": "purmamarca",
+   "departure": "2026-11-29T21:30:00-03:00",
+   "durationH": 2.5,
+   "capacityMin": 4,
+   "capacityMax": 20,
+   "booked": 6,
+   "pricePerPersonARS": 35000,
+   "demoPrice": true,
+   "includes": [
+    "Bebida caliente",
+    "Telescopio"
+   ],
+   "meetingPoint": "Purmamarca",
+   "physicalLevel": "bajo",
+   "maxAltitudeM": 2400,
+   "languages": [
+    "es",
+    "en"
+   ],
+   "weatherPolicy": "Garantía de cielo: si a 6 h de la salida el score de la noche es menor a 40, la salida pasa a reprogramación sugerida y elegís otra fecha o el reintegro de la seña.",
+   "demo": true
+  },
+  {
+   "id": "mk-16",
+   "title": "Cielo profundo en el COAS",
+   "guideId": "g-ana",
+   "pointId": "susques",
+   "departure": "2026-11-29T22:00:00-03:00",
+   "durationH": 3,
+   "capacityMin": 4,
+   "capacityMax": 12,
+   "booked": 2,
+   "pricePerPersonARS": 55000,
+   "demoPrice": true,
+   "includes": [
+    "Telescopio",
+    "Bebida caliente",
+    "Ponchos y mantas"
+   ],
+   "meetingPoint": "Susques",
+   "physicalLevel": "bajo",
+   "maxAltitudeM": 3605,
+   "languages": [
+    "es",
+    "en"
+   ],
+   "weatherPolicy": "Garantía de cielo: si a 6 h de la salida el score de la noche es menor a 40, la salida pasa a reprogramación sugerida y elegís otra fecha o el reintegro de la seña.",
+   "demo": true
+  }
+ ]
+}

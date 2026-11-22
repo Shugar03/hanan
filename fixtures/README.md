@@ -12,3 +12,9 @@ Capturados el **2026-11-22** (~11:00 ART). Sirven para trabajar, testear y hacer
 | `demo-demanda.json` | **DATOS DE EJEMPLO.** 42 señales "Quiero ir" (`DemandSignal`): 6 puntos × 7 noches, valores 0–20 | Inventado para la demo |
 
 La UI tiene que etiquetar salidas y demanda como ejemplo (spec HU-9). No reemplazar por guías o teléfonos reales sin consentimiento.
+
+## Grilla de capas (Explorar)
+
+| Archivo | Qué es | Fuente / licencia |
+|---|---|---|
+| `openmeteo_grid.json` | Grilla regular sobre la Puna jujeña para las capas animables del mapa (`src/data/grid.ts`). **13 × 12 = 156 celdas**: lat −22,0 → −24,4 (norte a sur) y lon −67,3 → −65,1 (oeste a este), paso 0,2°; cubre los 6 puntos con margen. **72 horas** (3 días desde 2026-11-22T00:00, hora local `America/Argentina/Jujuy`). Capturado el 2026-11-22 ~11:57 ART con **una sola** request `POST https://api.open-meteo.com/v1/forecast` (JSON multi-coordenada; cada celda cuenta como una llamada del cupo). Formato compacto: `grid` (metadata), `start`, `hours`, `elevation[celda]` y `vars[variable][hora][celda]` con `celda = fila·12 + col` (fila 0 = norte). Variables: `cloud_total`, `cloud_low`, `cloud_mid`, `cloud_high`, `humidity` (%), `wind_speed`, `wind_gust` (km/h), `wind_dir` (° de dónde viene), `temp` (°C, 1 decimal; el resto entero). Lat/lon son las pedidas (Open-Meteo las ajusta a su modelo) | [Open-Meteo.com](https://open-meteo.com/), **CC BY 4.0** — mostrar "Open-Meteo.com (CC BY 4.0)" junto a la leyenda de capas |

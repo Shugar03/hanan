@@ -57,9 +57,11 @@ type Props = {
   onSelect: (id: PointId) => void;
   sats: SatMarker[];
   modo: string;
+  /** Expone la instancia del mapa (capas meteorológicas). */
+  onMap?: (m: MLMap | null) => void;
 };
 
-export function MapView({ models, selected, onSelect, sats, modo }: Props) {
+export function MapView({ models, selected, onSelect, sats, modo, onMap }: Props) {
   const box = useRef<HTMLDivElement>(null);
   const map = useRef<MLMap | null>(null);
   const markers = useRef<Map<string, { m: Marker; el: HTMLButtonElement }>>(new Map());
@@ -79,6 +81,7 @@ export function MapView({ models, selected, onSelect, sats, modo }: Props) {
     fit();
     const ro = new ResizeObserver(() => { m.resize(); fit(); });
     ro.observe(box.current);
+    m.on('load', () => onMapRef.current?.(m));
     m.on('load', () => {
       m.addSource('rn52', { type: 'geojson', data: { type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: RN52 } } });
       m.addLayer({ id: 'rn52', type: 'line', source: 'rn52', paint: { 'line-color': cssVar('--text-2'), 'line-width': 1.5, 'line-dasharray': [2, 2], 'line-opacity': 0.7 } });
@@ -92,9 +95,11 @@ export function MapView({ models, selected, onSelect, sats, modo }: Props) {
       markers.current.set(p.id, { m: mk, el });
     }
     m.on('move', () => placeNames(box.current, markers.current.values()));
-    return () => { ro.disconnect(); m.remove(); markers.current.clear(); satMarkers.current.clear(); };
+    return () => { onMapRef.current?.(null); ro.disconnect(); m.remove(); markers.current.clear(); satMarkers.current.clear(); };
   }, []);
 
+  const onMapRef = useRef(onMap);
+  onMapRef.current = onMap;
   const onSelectRef = useRef(onSelect);
   onSelectRef.current = onSelect;
 

@@ -39,6 +39,14 @@ export function elevationDeg(rec: S.SatRec, d: Date, p: Pt): number | null {
   return S.radiansToDegrees(la.elevation);
 }
 
+/** Azimut y altura (grados) del satélite visto desde un punto. */
+export function lookAt(rec: S.SatRec, d: Date, p: Pt): { azDeg: number; altDeg: number } | null {
+  const pos = eci(rec, d); if (!pos) return null;
+  const gd = { latitude: S.degreesToRadians(p.lat), longitude: S.degreesToRadians(p.lon), height: p.elevationM / 1000 };
+  const la = S.ecfToLookAngles(gd as never, S.eciToEcf(pos as never, S.gstime(d)));
+  return { azDeg: (S.radiansToDegrees(la.azimuth) + 360) % 360, altDeg: S.radiansToDegrees(la.elevation) };
+}
+
 /** Satélite iluminado por el sol (modelo de sombra cilíndrica). */
 export function isSunlit(rec: S.SatRec, d: Date): boolean {
   const r = eci(rec, d); if (!r) return false;

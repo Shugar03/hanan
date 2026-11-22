@@ -1,0 +1,178 @@
+/* Capas meteorológicas: controles. Solo roles semánticos de design/tokens.css (el modo rojo funciona solo). */
+.capas {
+  --capas-noche: var(--bg);
+  --capas-crepusculo: color-mix(in srgb, var(--text-2) 28%, var(--bg));
+  --capas-dia: color-mix(in srgb, var(--text-2) 55%, var(--surface));
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  color: var(--text);
+  font-family: var(--font-texto);
+  min-width: 0;
+}
+
+.capas-chips {
+  display: flex;
+  gap: var(--space-1);
+  overflow-x: auto;
+  scrollbar-width: none;
+  margin: 0 calc(-1 * var(--space-1));
+  padding: 0 var(--space-1);
+  scroll-snap-type: x proximity;
+}
+.capas-chips::-webkit-scrollbar { display: none; }
+
+.capas-chip {
+  flex: 0 0 auto;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-2);
+  font: 500 var(--size-sm)/1 var(--font-texto);
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  scroll-snap-align: start;
+  transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+.capas-chip:hover { color: var(--text); border-color: var(--text-2); }
+.capas-chip[aria-pressed="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+  font-weight: 600;
+}
+.capas-chip:focus-visible, .capas-play:focus-visible, .capas-scrub input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.capas-time {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.capas-play {
+  width: 44px; height: 44px;
+  display: grid; place-items: center;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+}
+.capas-play svg { fill: currentColor; }
+.capas-play[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+
+.capas-scrub { position: relative; padding-bottom: 16px; min-width: 0; }
+.capas-scrub input {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 44px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.capas-scrub input::-webkit-slider-runnable-track {
+  height: 10px;
+  border-radius: var(--radius-pill);
+  background: var(--capas-track);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+.capas-scrub input::-moz-range-track {
+  height: 10px;
+  border-radius: var(--radius-pill);
+  background: var(--capas-track);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+.capas-scrub input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px; height: 22px;
+  margin-top: -6px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid var(--bg);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.capas-scrub input::-moz-range-thumb {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid var(--bg);
+}
+.capas-days {
+  position: absolute;
+  left: 11px; right: 11px; bottom: 0;
+  height: 14px;
+  pointer-events: none;
+}
+.capas-days span {
+  position: absolute;
+  transform: translateX(-1px);
+  padding-left: 4px;
+  border-left: 1px solid var(--border);
+  font: 500 var(--size-xs)/14px var(--font-datos);
+  color: var(--text-2);
+  white-space: nowrap;
+}
+
+.capas-now {
+  display: grid;
+  justify-items: end;
+  line-height: 1.1;
+  font-family: var(--font-datos);
+  font-variant-numeric: tabular-nums;
+  min-width: 52px;
+}
+.capas-now-day { font-size: var(--size-xs); color: var(--text-2); }
+.capas-now-hm { font-size: var(--size-lg); font-weight: 600; color: var(--text); letter-spacing: -0.01em; }
+
+.capas-legend { display: grid; gap: 6px; }
+.capas-legend-head { display: flex; align-items: baseline; gap: var(--space-2); flex-wrap: wrap; }
+.capas-legend-title { font-size: var(--size-sm); font-weight: 600; }
+.capas-legend-unit { font-size: var(--size-xs); color: var(--text-2); font-variant-numeric: tabular-nums; }
+.capas-legend-note {
+  margin-left: auto;
+  font-size: var(--size-xs);
+  color: var(--text-2);
+}
+.capas-bar {
+  height: 8px;
+  border-radius: var(--radius-pill);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+.capas-ticks { position: relative; height: 16px; margin: 0 2px; }
+.capas-ticks span {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  display: grid;
+  justify-items: center;
+  font: 500 var(--size-xs)/1.25 var(--font-datos);
+  color: var(--text-2);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.capas-ticks span[data-edge="start"] { transform: none; justify-items: start; }
+.capas-ticks span[data-edge="end"] { transform: translateX(-100%); justify-items: end; }
+.capas-ticks b { color: var(--text); font-weight: 600; }
+
+.capas-cats { list-style: none; margin: 2px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px var(--space-3); }
+.capas-cats li { display: inline-flex; align-items: center; gap: 6px; font-size: var(--size-xs); color: var(--text); white-space: nowrap; }
+.capas-cats li span { color: var(--text-2); font-variant-numeric: tabular-nums; }
+.capas-cats i { width: 8px; height: 8px; border-radius: 50%; box-shadow: 0 0 0 1px var(--border); }
+.capas-attrib { margin: 0; font-size: 11px; color: var(--text-2); }
+
+@media (prefers-reduced-motion: reduce) {
+  .capas-chip { transition: none; }
+}

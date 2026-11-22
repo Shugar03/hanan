@@ -37,12 +37,17 @@ export function computePoint(point: ObservationPoint, fc: HourlyConditions[], no
     if (c) { withFc++; hours.push(scoreHour(c, point)); } else hours.push(scoreAstronomyOnly(new Date(t), point));
   }
   const first = upcomingNight(now);
-  const nights = [...byNight(hours)].filter(([n]) => n >= first).slice(0, 7).map(([n, ss]) => scoreNight(n, ss, point));
+  const coverage = withFc === 0 ? 'ninguno' : withFc < hours.length ? 'parcial' : 'completo';
+  // Una noche con pronóstico solo en parte (típicamente la 7.ª) mezclaría horas reales con horas "sin nubes":
+  // se descarta para no inflar el score. Sin pronóstico en absoluto (simulador), todo es cálculo astronómico.
+  const allNights = [...byNight(hours)].filter(([n]) => n >= first).slice(0, 7).map(([n, ss]) => scoreNight(n, ss, point));
+  const full = allNights.filter((n) => coverage === 'ninguno' || hours.every((h) => +h.time < +n.astroDusk - H || +h.time > +n.astroDawn || !h.astronomyOnly));
+  const nights = full.length ? full : allNights;
   const tonight = nights.find((n) => n.night === first) ?? nights[0];
   return {
     point, hours, conditions, timeline: hours.slice(0, 72), nights, tonight,
     week: bestNight(nights),
-    forecastCoverage: withFc === 0 ? 'ninguno' : withFc < hours.length ? 'parcial' : 'completo',
+    forecastCoverage: coverage,
   };
 }
 

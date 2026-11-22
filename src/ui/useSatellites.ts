@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { fromOmm, passes, subPoint, type Tracked } from '../sky/satellites';
+import { fromOmm, isSunlit, lookAt, passes, subPoint, visibleNow, type Tracked } from '../sky/satellites';
+import { sunAltitude } from '../sky/ephemeris';
 import type { ObservationPoint, SatPass } from '../sky/types';
 import { loadOmm } from '../data/omm';
 import { FIXTURE_CAPTURED_AT, fixtures } from '../data/sources';
@@ -16,6 +17,13 @@ export function useSatellites(now: Date, simulated: boolean, point: ObservationP
   const t = simulated ? now : new Date(tick);
   const live: SatMarker[] = src.list.map((s) => { const p = subPoint(s.rec, t); return p ? { name: s.name, ...p } : null; }).filter(Boolean) as SatMarker[];
 
+  // Para el cielo en vivo: altura/azimut desde el punto elegido (ARSAT 2 nunca se ve a simple vista).
+  const sunAlt = sunAltitude(t, point);
+  const sky = src.list.map((s) => {
+    const la = lookAt(s.rec, t, point); if (!la) return null;
+    return { name: s.name, azDeg: la.azDeg, altDeg: la.altDeg, visible: s.name !== 'ARSAT 2' && visibleNow(la.altDeg, sunAlt, isSunlit(s.rec, t)) };
+  }).filter(Boolean) as { name: string; azDeg: number; altDeg: number; visible: boolean }[];
+
   const hourKey = Math.floor(now.getTime() / 3600_000);
   const upcoming = useMemo(() => {
     const start = new Date(hourKey * 3600_000);
@@ -26,5 +34,5 @@ export function useSatellites(now: Date, simulated: boolean, point: ObservationP
     }
     return out.sort((a, b) => +a.start - +b.start);
   }, [src, point, hourKey]);
-  return { live, upcoming, fetchedAt: src.fetchedAt, origin: src.origin };
+  return { live, sky, upcoming, tracked: src.list, fetchedAt: src.fetchedAt, origin: src.origin };
 }

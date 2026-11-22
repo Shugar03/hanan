@@ -10,10 +10,13 @@ import { publishSalida, publishedSalidas, whatsappLink } from '../../data/salida
 import { aggregated } from '../../data/demand';
 import { hhmm, longDate, nightLabel } from '../format';
 import { ScoreBadge } from '../Score';
+import { Slot, ext, optional } from '../Optional';
 
-type Props = { models: Record<PointId, PointModel>; now: Date; todayStr: string };
+const CrearSalidaForm = optional<any>('salidas', ext.salidas, 'CrearSalidaForm');
 
-export function GuiaPanel({ models, now, todayStr }: Props) {
+type Props = { models: Record<PointId, PointModel>; now: Date; todayStr: string; nightScore?: (pointId: string, night: string) => number | null };
+
+export function GuiaPanel({ models, now, todayStr, nightScore }: Props) {
   const [, force] = useState(0);
   const alerts = excellentAlerts(models);
   const demand = demandRows(models, aggregated()).slice(0, 8);
@@ -58,6 +61,13 @@ export function GuiaPanel({ models, now, todayStr }: Props) {
       </section>
 
       <PublishForm models={models} todayStr={todayStr} onDone={() => force((x) => x + 1)} />
+
+      {CrearSalidaForm && (
+        <details className="card more">
+          <summary>Crear salida completa para el marketplace (precio, qué incluye, política de clima)</summary>
+          <Slot C={CrearSalidaForm} title="Crear salida" props={{ onCreated: () => force((x) => x + 1), nightScore, now }} />
+        </details>
+      )}
 
       <section className="card">
         <h2>Tus salidas</h2>
