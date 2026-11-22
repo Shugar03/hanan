@@ -51,24 +51,29 @@ const tilesFor = (light: boolean) => ({
   base: [`${ESRI}Canvas/${light ? 'World_Light_Gray_Base' : 'World_Dark_Gray_Base'}/MapServer/tile/{z}/{y}/{x}`],
 });
 const isLight = () => document.documentElement.dataset.tema === 'claro' && document.documentElement.dataset.modo !== 'rojo';
+const OPACITY = (light: boolean) => ({ base: light ? 0.8 : 0.55, relieve: light ? 0.45 : 0.7 });
+/** Mismo rango de zoom en las dos fuentes (sobre-zoom más allá de 13): nunca se mezclan teselas de niveles distintos entre base y relieve. */
+const TILE_ZOOM = { minzoom: 0, maxzoom: 13 } as const;
+const RASTER_PAINT = { 'raster-fade-duration': 0, 'raster-opacity-transition': { duration: 250, delay: 0 } } as const;
 
 const style = (light = isLight()): StyleSpecification => ({
   version: 8,
   sources: {
     relieve: {
-      type: 'raster', tileSize: 256, maxzoom: 13,
+      type: 'raster', tileSize: 256, ...TILE_ZOOM,
       tiles: tilesFor(light).relieve,
       attribution: 'Relieve y base: Esri · © OpenStreetMap',
     },
     base: {
-      type: 'raster', tileSize: 256, maxzoom: 16,
+      type: 'raster', tileSize: 256, ...TILE_ZOOM,
       tiles: tilesFor(light).base,
     },
   },
   layers: [
     { id: 'bg', type: 'background', paint: { 'background-color': cssVar('--bg') } },
-    { id: 'base', type: 'raster', source: 'base', paint: { 'raster-opacity': light ? 0.8 : 0.55 } },
-    { id: 'relieve', type: 'raster', source: 'relieve', paint: { 'raster-opacity': light ? 0.45 : 0.7 } },
+    // Arrancan en 0 y se revelan juntas cuando las dos fuentes terminaron de cargar (revealTiles): sin parches de carga.
+    { id: 'base', type: 'raster', source: 'base', paint: { 'raster-opacity': 0, ...RASTER_PAINT } },
+    { id: 'relieve', type: 'raster', source: 'relieve', paint: { 'raster-opacity': 0, ...RASTER_PAINT } },
   ],
 });
 
@@ -91,6 +96,20 @@ export function MapView({ models, selected, onSelect, sats, modo, tema, onMap }:
   const satMarkers = useRef<Map<string, Marker>>(new Map());
   const [failed, setFailed] = useState(false);
   const tilesLight = useRef<boolean | null>(null);
+  const revealed = useRef(false);
+  /** Muestra base y relieve juntos cuando el mapa queda quieto con todas las teselas (o a los 4 s, p. ej. sin red). */
+  const revealTiles = (m: MLMap) => {
+    revealed.current = false;
+    let done = false;
+    const show = () => {
+      if (done) return; done = true; revealed.current = true;
+      const o = OPACITY(isLight());
+      if (m.getLayer('base')) m.setPaintProperty('base', 'raster-opacity', o.base);
+      if (m.getLayer('relieve')) m.setPaintProperty('relieve', 'raster-opacity', o.relieve);
+    };
+    m.once('idle', show);
+    setTimeout(show, 4000);
+  };
 
   useEffect(() => {
     if (!box.current) return;
@@ -107,6 +126,7 @@ export function MapView({ models, selected, onSelect, sats, modo, tema, onMap }:
     views.set(m, { custom: null, fitPoints });
     const fit = () => { const v = views.get(m); if (v?.custom) v.custom(); else fitPoints(); };
     fit();
+    revealTiles(m);
     const ro = new ResizeObserver(() => { m.resize(); fit(); });
     ro.observe(box.current);
     // Avisar apenas el estilo está listo (no esperar a que bajen todos los tiles, que sin red tardan o fallan).
@@ -178,12 +198,16 @@ export function MapView({ models, selected, onSelect, sats, modo, tema, onMap }:
       if (tilesLight.current !== light) {
         tilesLight.current = light;
         for (const id of ['base', 'relieve'] as const) {
+          if (m.getLayer(id)) m.setPaintProperty(id, 'raster-opacity', 0);
           const src = m.getSource(id) as unknown as { setTiles?: (x: string[]) => void } | undefined;
           src?.setTiles?.(t[id]);
         }
+        revealTiles(m);
+      } else if (revealed.current) {
+        const o = OPACITY(light);
+        if (m.getLayer('base')) m.setPaintProperty('base', 'raster-opacity', o.base);
+        if (m.getLayer('relieve')) m.setPaintProperty('relieve', 'raster-opacity', o.relieve);
       }
-      if (m.getLayer('base')) m.setPaintProperty('base', 'raster-opacity', light ? 0.8 : 0.55);
-      if (m.getLayer('relieve')) m.setPaintProperty('relieve', 'raster-opacity', light ? 0.45 : 0.7);
       if (m.getLayer('bg')) m.setPaintProperty('bg', 'background-color', cssVar('--bg'));
       if (m.getLayer('rn52')) m.setPaintProperty('rn52', 'line-color', cssVar('--text-2'));
     };

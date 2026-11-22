@@ -372,3 +372,31 @@ html { scrollbar-color: var(--border) transparent; accent-color: var(--accent); 
 /* Tema claro: ajustes que no resuelven los roles solos */
 :root[data-tema="claro"]:not([data-modo="rojo"]) .pin-name { box-shadow: 0 1px 2px rgb(10 11 15 / .12); }
 :root[data-tema="claro"]:not([data-modo="rojo"]) .simpop { box-shadow: 0 8px 24px -10px rgb(10 11 15 / .22); }
+
+/* ---------- Modo observatorio: acceso con un toque ---------- */
+/* Explorar: acción flotante abajo a la derecha del mapa, por encima de la atribución (desktop) y de la tira de capas (mobile). */
+.obs-fab { position: absolute; z-index: 7; right: var(--space-3); bottom: 36px; }
+.obs-fab .obs-open { width: 52px; height: 52px; background: var(--accent); border-color: var(--accent); color: var(--on-accent); box-shadow: 0 4px 12px -4px rgb(0 0 0 / .45); }
+.obs-fab .obs-open .obs-open-star { fill: var(--on-accent); stroke: var(--on-accent); }
+.obs-fab .obs-open:hover { filter: brightness(1.06); border-color: var(--accent); }
+@media (max-width: 719px) {
+  .obs-fab { right: var(--space-2); bottom: calc(var(--capas-strip-h, 64px) + var(--space-2) * 2); }
+}
+/* Cielo: acción primaria "Observatorio" (todo el botón es tocable: el ::after del botón cubre la píldora). */
+.app[data-tab="cielo"] .page-full { position: relative; }
+.obs-cta {
+  position: absolute; z-index: 5; right: var(--space-4); bottom: calc(var(--cielo-bar-h, 132px) + var(--space-3)); flex: none !important;
+  display: inline-flex; align-items: center; gap: var(--space-1); min-height: 52px; padding: 4px var(--space-5, 20px) 4px 4px;
+  border-radius: var(--radius-pill); background: var(--accent); color: var(--on-accent); font-weight: 600; font-size: var(--size-md);
+  box-shadow: 0 4px 12px -4px rgb(0 0 0 / .45);
+}
+.obs-cta .obs-open { border: 0; background: transparent; color: var(--on-accent); }
+.obs-cta .obs-open::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
+.obs-cta .obs-open:focus-visible { outline: none; }
+.obs-cta:has(.obs-open:focus-visible) { outline: 2px solid var(--text); outline-offset: 2px; }
+.obs-cta .obs-open .obs-open-star { fill: var(--on-accent); stroke: var(--on-accent); }
+.obs-cta:hover { filter: brightness(1.06); }
+
+/* Tema deshabilitado en modo rojo */
+.icon-btn.is-disabled { opacity: .55; cursor: not-allowed; }
+.icon-btn.is-disabled:hover { background: transparent; color: var(--text-2); }

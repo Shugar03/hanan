@@ -15,6 +15,9 @@ import { TabBar, isTab, type Tab } from './ui/nav/Tabs';
 import { Slot, ext, optional } from './ui/Optional';
 import { MiNoche } from './ui/noche/MiNoche';
 import { WeatherLayers } from './ui/capas-host';
+import { Observatorio, ObservatorioButton } from './ui/observatorio';
+
+const RED_THEME_HINT = 'Desactivá el modo rojo para cambiar el tema';
 
 const CieloView = optional<any>('cielo', ext.cielo, 'default');
 const SalidasTab = optional<any>('salidas', ext.salidas, 'SalidasTab');
@@ -64,6 +67,7 @@ export default function App() {
   const [tab, setTabState] = useState<Tab>(() => { const t = params().get('tab'); return isTab(t) ? t : 'explorar'; });
   const [guia, setGuia] = useState(() => params().has('guia'));
   const [salidaId, setSalidaId] = useState<string | null>(() => params().get('salida'));
+  const [obs, setObs] = useState(() => params().get('obs') === '1');
   const [sim, setSim] = useState<Date | null>(() => { const q = params().get('fecha'); return q ? new Date(q.length <= 16 ? `${q}:00-03:00` : q) : null; });
   const [simOpen, setSimOpen] = useState(false);
   const simRef = useRef<HTMLDivElement>(null);
@@ -93,7 +97,8 @@ export default function App() {
   // Estado en la URL para deep links de la demo.
   // Pestaña, ficha de salida y modo guía crean una entrada de historial (pushState): el back del navegador vuelve.
   // Cambios menores (punto, fecha simulada) reemplazan la entrada actual (replaceState).
-  type Nav = { tab: Tab; guia: boolean; salidaId: string | null };
+  // El modo observatorio (&obs=1) también crea entrada: el back lo cierra.
+  type Nav = { tab: Tab; guia: boolean; salidaId: string | null; obs?: boolean };
   const depth = useRef(0); // entradas de historial creadas por Hanan desde la carga
   const urlFor = (n: Nav) => {
     const q = new URLSearchParams();
@@ -102,19 +107,24 @@ export default function App() {
     if (n.guia) q.set('guia', '');
     if (n.salidaId && n.tab === 'salidas') q.set('salida', n.salidaId);
     if (sim) q.set('fecha', toLocalInput(sim));
+    if (n.obs) q.set('obs', '1');
     const qs = q.toString().replace(/guia=(&|$)/, 'guia$1');
     return qs ? `?${qs}` : location.pathname;
   };
   useEffect(() => {
-    history.replaceState({ hanan: true, depth: depth.current }, '', urlFor({ tab, guia, salidaId }));
-  }, [tab, selected, guia, salidaId, sim]);
+    history.replaceState({ hanan: true, depth: depth.current }, '', urlFor({ tab, guia, salidaId, obs }));
+  }, [tab, selected, guia, salidaId, sim, obs]);
   const navigate = (n: Nav) => {
-    if (n.tab === tab && n.guia === guia && n.salidaId === salidaId) return;
+    const nObs = !!n.obs;
+    if (n.tab === tab && n.guia === guia && n.salidaId === salidaId && nObs === obs) return;
     depth.current += 1;
     history.pushState({ hanan: true, depth: depth.current }, '', urlFor(n));
-    setTabState(n.tab); setGuia(n.guia); setSalidaId(n.salidaId);
-    window.scrollTo({ top: 0 });
+    const onlyObs = n.tab === tab && n.guia === guia && n.salidaId === salidaId;
+    setTabState(n.tab); setGuia(n.guia); setSalidaId(n.salidaId); setObs(nObs);
+    if (!onlyObs) window.scrollTo({ top: 0 });
   };
+  const openObs = () => navigate({ tab, guia, salidaId, obs: true });
+  const closeObs = () => (depth.current > 0 ? history.back() : navigate({ tab, guia, salidaId, obs: false }));
   useEffect(() => {
     const onPop = (e: PopStateEvent) => {
       depth.current = (e.state && typeof e.state.depth === 'number') ? e.state.depth : 0;
@@ -123,6 +133,7 @@ export default function App() {
       setTabState(isTab(t) ? t : 'explorar');
       setGuia(q.has('guia'));
       setSalidaId(q.get('salida'));
+      setObs(q.get('obs') === '1');
       const pt = q.get('punto'); if (isPoint(pt)) setSelected(pt);
     };
     window.addEventListener('popstate', onPop);
@@ -147,6 +158,7 @@ export default function App() {
         <MapView models={models} selected={selected} onSelect={(id) => { setSelected(id); if (guia) navigate({ tab, guia: false, salidaId }); }} sats={sats.live} modo={modo} tema={tema} onMap={setMap} />
         <PassChip pass={pass} />
         <WeatherLayers map={map} now={now} />
+        {!guia && <div className="obs-fab"><ObservatorioButton onOpen={openObs} /></div>}
       </div>
       <aside className="panel" aria-label={guia ? 'Modo guía' : 'Detalle del punto'}>
         {guia ? <GuiaPanel models={models} now={now} todayStr={todayStr} nightScore={nightScore} /> : <Panel models={models} selected={selected} onSelect={setSelected} now={now} simulated={!!sim} sats={sats} />}
@@ -159,6 +171,7 @@ export default function App() {
   if (guia || tab === 'explorar') content = explorar;
   else if (tab === 'cielo') content = (
     <main className="page page-full tema-noche">
+      <div className="obs-cta"><ObservatorioButton onOpen={openObs} /><span aria-hidden>Observatorio</span></div>
       <Slot C={CieloView} title="Cielo en vivo" note="El mapa del cielo desde el punto elegido estará disponible en breve."
         props={{ point: { name: point.name, lat: point.lat, lon: point.lon, elevationM: point.elevationM }, date: now, onDateChange: (d: Date) => setSim(d), satellites: sats.sky }} />
     </main>
@@ -197,7 +210,13 @@ export default function App() {
           <IconButton icon={UserRound} label="Modo guía" text={guia ? 'Modo guía' : 'Soy guía'} pressed={guia}
             onClick={() => navigate({ tab, guia: !guia, salidaId: guia ? salidaId : null })} />
           <span className="actions-sep" aria-hidden />
-          <IconButton icon={tema === 'claro' ? Moon : Sun} label={tema === 'claro' ? 'Tema oscuro' : 'Tema claro'} onClick={toggleTema} />
+          {modo === 'rojo'
+            ? <>
+              {/* El nombre no repite "modo rojo": el toggle de rojo se busca por ese nombre (contrato E2E). La pista va como descripción y tooltip. */}
+              <IconButton icon={tema === 'claro' ? Moon : Sun} label="Cambiar tema (no disponible ahora)" title={RED_THEME_HINT} aria-disabled="true" aria-describedby="tema-hint" className="is-disabled" />
+              <span id="tema-hint" className="sr-only">{RED_THEME_HINT}</span>
+            </>
+            : <IconButton icon={tema === 'claro' ? Moon : Sun} label={tema === 'claro' ? 'Tema oscuro' : 'Tema claro'} title={tema === 'claro' ? 'Tema oscuro' : 'Tema claro'} onClick={toggleTema} />}
           <IconButton icon={Eye} label="Modo rojo de visión nocturna" text="Rojo" pressed={modo === 'rojo'} onClick={toggleModo} />
         </div>
         {simOpen && (
@@ -225,6 +244,12 @@ export default function App() {
       )}
 
       {content}
+
+      {obs && (
+        <div className="tema-noche obs-host">
+          <Observatorio point={{ name: point.name, lat: point.lat, lon: point.lon, elevationM: point.elevationM }} date={now} satellites={sats.sky} onClose={closeObs} />
+        </div>
+      )}
     </div>
   );
 }
