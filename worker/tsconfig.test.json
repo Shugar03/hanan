@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": [
+      "node"
+    ]
+  },
+  "include": [
+    "test/**/*.ts",
+    "src/jama.ts",
+    "src/points.ts",
+    "src/cachePolicy.ts"
+  ]
+}

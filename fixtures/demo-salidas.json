@@ -1,0 +1,192 @@
+[
+  {
+    "id": "demo-01",
+    "guideName": "Guía demo · Ana",
+    "guideRegistered": true,
+    "pointId": "susques",
+    "departure": "2026-11-22T21:30:00-03:00",
+    "durationH": 3,
+    "capacity": 12,
+    "languages": [
+      "es",
+      "en"
+    ],
+    "priceRef": "Consultar",
+    "whatsapp": "5493880000001",
+    "demo": true
+  },
+  {
+    "id": "demo-02",
+    "guideName": "Operador demo Puna Noche",
+    "guideRegistered": false,
+    "pointId": "salinas",
+    "departure": "2026-11-23T20:30:00-03:00",
+    "durationH": 3.5,
+    "capacity": 20,
+    "languages": [
+      "es"
+    ],
+    "priceRef": "Precio de referencia a confirmar",
+    "whatsapp": "5493880000002",
+    "demo": true
+  },
+  {
+    "id": "demo-03",
+    "guideName": "Guía demo · Ramiro",
+    "guideRegistered": true,
+    "pointId": "olaroz",
+    "departure": "2026-11-23T22:00:00-03:00",
+    "durationH": 4,
+    "capacity": 8,
+    "languages": [
+      "es",
+      "en",
+      "pt"
+    ],
+    "priceRef": "Consultar",
+    "whatsapp": "5493880000003",
+    "demo": true
+  },
+  {
+    "id": "demo-04",
+    "guideName": "Guía demo · Ana",
+    "guideRegistered": true,
+    "pointId": "susques",
+    "departure": "2026-11-24T22:30:00-03:00",
+    "durationH": 3,
+    "capacity": 12,
+    "languages": [
+      "es",
+      "en"
+    ],
+    "priceRef": "Consultar",
+    "whatsapp": "5493880000001",
+    "demo": true
+  },
+  {
+    "id": "demo-05",
+    "guideName": "Guía demo · Lucía",
+    "guideRegistered": false,
+    "pointId": "purmamarca",
+    "departure": "2026-11-24T21:00:00-03:00",
+    "durationH": 2.5,
+    "capacity": 15,
+    "languages": [
+      "es",
+      "pt"
+    ],
+    "priceRef": "Precio de referencia a confirmar",
+    "whatsapp": "5493880000004",
+    "demo": true
+  },
+  {
+    "id": "demo-06",
+    "guideName": "Operador demo Puna Noche",
+    "guideRegistered": false,
+    "pointId": "salinas",
+    "departure": "2026-11-25T20:30:00-03:00",
+    "durationH": 3.5,
+    "capacity": 20,
+    "languages": [
+      "es",
+      "en"
+    ],
+    "priceRef": "Precio de referencia a confirmar",
+    "whatsapp": "5493880000002",
+    "demo": true
+  },
+  {
+    "id": "demo-07",
+    "guideName": "Guía demo · Ramiro",
+    "guideRegistered": true,
+    "pointId": "olaroz",
+    "departure": "2026-11-26T23:00:00-03:00",
+    "durationH": 4,
+    "capacity": 8,
+    "languages": [
+      "es",
+      "en"
+    ],
+    "priceRef": "Consultar",
+    "whatsapp": "5493880000003",
+    "demo": true
+  },
+  {
+    "id": "demo-08",
+    "guideName": "Guía demo · Lucía",
+    "guideRegistered": false,
+    "pointId": "purmamarca",
+    "departure": "2026-11-26T21:30:00-03:00",
+    "durationH": 2.5,
+    "capacity": 15,
+    "languages": [
+      "es"
+    ],
+    "priceRef": "Consultar",
+    "whatsapp": "5493880000004",
+    "demo": true
+  },
+  {
+    "id": "demo-09",
+    "guideName": "Operador demo Estrellas del Altiplano",
+    "guideRegistered": true,
+    "pointId": "jama",
+    "departure": "2026-11-27T22:00:00-03:00",
+    "durationH": 3,
+    "capacity": 10,
+    "languages": [
+      "es",
+      "en"
+    ],
+    "priceRef": "Precio de referencia a confirmar",
+    "whatsapp": "5493880000005",
+    "demo": true
+  },
+  {
+    "id": "demo-10",
+    "guideName": "Guía demo · Ana",
+    "guideRegistered": true,
+    "pointId": "susques",
+    "departure": "2026-11-27T23:30:00-03:00",
+    "durationH": 3,
+    "capacity": 12,
+    "languages": [
+      "es",
+      "en"
+    ],
+    "priceRef": "Consultar",
+    "whatsapp": "5493880000001",
+    "demo": true
+  },
+  {
+    "id": "demo-11",
+    "guideName": "Operador demo Puna Noche",
+    "guideRegistered": false,
+    "pointId": "salinas",
+    "departure": "2026-11-28T21:00:00-03:00",
+    "durationH": 3.5,
+    "capacity": 20,
+    "languages": [
+      "es",
+      "en"
+    ],
+    "priceRef": "Precio de referencia a confirmar",
+    "whatsapp": "5493880000002",
+    "demo": true
+  },
+  {
+    "id": "demo-12",
+    "guideName": "Guía demo · Mateo",
+    "guideRegistered": false,
+    "pointId": "tilcara",
+    "departure": "2026-11-28T20:00:00-03:00",
+    "durationH": 2,
+    "capacity": 10,
+    "languages": [
+      "es"
+    ],
+    "priceRef": "Consultar",
+    "whatsapp": "5493880000006",
+    "demo": true
+  }
+]

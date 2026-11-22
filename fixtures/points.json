@@ -1,0 +1,8 @@
+[
+  { "id": "purmamarca", "name": "Purmamarca", "lat": -23.74595, "lon": -65.49976, "elevationM": 2324 },
+  { "id": "salinas", "name": "Salinas Grandes (mirador RN 52)", "lat": -23.62, "lon": -65.87, "elevationM": 3450, "approximate": true },
+  { "id": "susques", "name": "Susques · COAS", "lat": -23.39858, "lon": -66.36753, "elevationM": 3605 },
+  { "id": "olaroz", "name": "Olaroz Chico · Observatorio", "lat": -23.39338, "lon": -66.80291, "elevationM": 4172 },
+  { "id": "jama", "name": "Jama", "lat": -23.24019, "lon": -67.01778, "elevationM": 4057 },
+  { "id": "tilcara", "name": "Tilcara (control Quebrada)", "lat": -23.57817, "lon": -65.39516, "elevationM": 2486 }
+]

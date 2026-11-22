@@ -1,0 +1,212 @@
+[
+  {
+    "pointId": "purmamarca",
+    "night": "2026-11-22",
+    "count": 6
+  },
+  {
+    "pointId": "salinas",
+    "night": "2026-11-22",
+    "count": 9
+  },
+  {
+    "pointId": "susques",
+    "night": "2026-11-22",
+    "count": 12
+  },
+  {
+    "pointId": "olaroz",
+    "night": "2026-11-22",
+    "count": 4
+  },
+  {
+    "pointId": "jama",
+    "night": "2026-11-22",
+    "count": 2
+  },
+  {
+    "pointId": "tilcara",
+    "night": "2026-11-22",
+    "count": 3
+  },
+  {
+    "pointId": "purmamarca",
+    "night": "2026-11-23",
+    "count": 6
+  },
+  {
+    "pointId": "salinas",
+    "night": "2026-11-23",
+    "count": 8
+  },
+  {
+    "pointId": "susques",
+    "night": "2026-11-23",
+    "count": 11
+  },
+  {
+    "pointId": "olaroz",
+    "night": "2026-11-23",
+    "count": 4
+  },
+  {
+    "pointId": "jama",
+    "night": "2026-11-23",
+    "count": 3
+  },
+  {
+    "pointId": "tilcara",
+    "night": "2026-11-23",
+    "count": 3
+  },
+  {
+    "pointId": "purmamarca",
+    "night": "2026-11-24",
+    "count": 3
+  },
+  {
+    "pointId": "salinas",
+    "night": "2026-11-24",
+    "count": 5
+  },
+  {
+    "pointId": "susques",
+    "night": "2026-11-24",
+    "count": 7
+  },
+  {
+    "pointId": "olaroz",
+    "night": "2026-11-24",
+    "count": 5
+  },
+  {
+    "pointId": "jama",
+    "night": "2026-11-24",
+    "count": 0
+  },
+  {
+    "pointId": "tilcara",
+    "night": "2026-11-24",
+    "count": 1
+  },
+  {
+    "pointId": "purmamarca",
+    "night": "2026-11-25",
+    "count": 5
+  },
+  {
+    "pointId": "salinas",
+    "night": "2026-11-25",
+    "count": 8
+  },
+  {
+    "pointId": "susques",
+    "night": "2026-11-25",
+    "count": 11
+  },
+  {
+    "pointId": "olaroz",
+    "night": "2026-11-25",
+    "count": 4
+  },
+  {
+    "pointId": "jama",
+    "night": "2026-11-25",
+    "count": 2
+  },
+  {
+    "pointId": "tilcara",
+    "night": "2026-11-25",
+    "count": 3
+  },
+  {
+    "pointId": "purmamarca",
+    "night": "2026-11-26",
+    "count": 9
+  },
+  {
+    "pointId": "salinas",
+    "night": "2026-11-26",
+    "count": 13
+  },
+  {
+    "pointId": "susques",
+    "night": "2026-11-26",
+    "count": 17
+  },
+  {
+    "pointId": "olaroz",
+    "night": "2026-11-26",
+    "count": 7
+  },
+  {
+    "pointId": "jama",
+    "night": "2026-11-26",
+    "count": 4
+  },
+  {
+    "pointId": "tilcara",
+    "night": "2026-11-26",
+    "count": 5
+  },
+  {
+    "pointId": "purmamarca",
+    "night": "2026-11-27",
+    "count": 9
+  },
+  {
+    "pointId": "salinas",
+    "night": "2026-11-27",
+    "count": 13
+  },
+  {
+    "pointId": "susques",
+    "night": "2026-11-27",
+    "count": 18
+  },
+  {
+    "pointId": "olaroz",
+    "night": "2026-11-27",
+    "count": 9
+  },
+  {
+    "pointId": "jama",
+    "night": "2026-11-27",
+    "count": 2
+  },
+  {
+    "pointId": "tilcara",
+    "night": "2026-11-27",
+    "count": 4
+  },
+  {
+    "pointId": "purmamarca",
+    "night": "2026-11-28",
+    "count": 8
+  },
+  {
+    "pointId": "salinas",
+    "night": "2026-11-28",
+    "count": 13
+  },
+  {
+    "pointId": "susques",
+    "night": "2026-11-28",
+    "count": 17
+  },
+  {
+    "pointId": "olaroz",
+    "night": "2026-11-28",
+    "count": 6
+  },
+  {
+    "pointId": "jama",
+    "night": "2026-11-28",
+    "count": 3
+  },
+  {
+    "pointId": "tilcara",
+    "night": "2026-11-28",
+    "count": 4
+  }
+]
