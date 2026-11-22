@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Map as MLMap } from 'maplibre-gl';
 import markUrl from '../design/logo/hanan-mark.svg';
 import type { PointId, Salida } from './sky/types';
@@ -59,19 +59,46 @@ export default function App() {
   useEffect(() => { if (tab === 'noche') loadMarketSalidas().then(setMarket); }, [tab]);
   const todayStr = nightOf(new Date(now.getTime() + 12 * 3600_000));
 
-  // Estado en la URL para deep links de la demo
-  useEffect(() => {
+  // Estado en la URL para deep links de la demo.
+  // Pestaña, ficha de salida y modo guía crean una entrada de historial (pushState): el back del navegador vuelve.
+  // Cambios menores (punto, fecha simulada) reemplazan la entrada actual (replaceState).
+  type Nav = { tab: Tab; guia: boolean; salidaId: string | null };
+  const depth = useRef(0); // entradas de historial creadas por Hanan desde la carga
+  const urlFor = (n: Nav) => {
     const q = new URLSearchParams();
-    if (tab !== 'explorar') q.set('tab', tab);
-    if (selected !== 'susques' || tab !== 'explorar') q.set('punto', selected);
-    if (guia) q.set('guia', '');
-    if (salidaId && tab === 'salidas') q.set('salida', salidaId);
+    if (n.tab !== 'explorar') q.set('tab', n.tab);
+    if (selected !== 'susques' || n.tab !== 'explorar') q.set('punto', selected);
+    if (n.guia) q.set('guia', '');
+    if (n.salidaId && n.tab === 'salidas') q.set('salida', n.salidaId);
     if (sim) q.set('fecha', toLocalInput(sim));
     const qs = q.toString().replace(/guia=(&|$)/, 'guia$1');
-    history.replaceState(null, '', qs ? `?${qs}` : location.pathname);
+    return qs ? `?${qs}` : location.pathname;
+  };
+  useEffect(() => {
+    history.replaceState({ hanan: true, depth: depth.current }, '', urlFor({ tab, guia, salidaId }));
   }, [tab, selected, guia, salidaId, sim]);
+  const navigate = (n: Nav) => {
+    if (n.tab === tab && n.guia === guia && n.salidaId === salidaId) return;
+    depth.current += 1;
+    history.pushState({ hanan: true, depth: depth.current }, '', urlFor(n));
+    setTabState(n.tab); setGuia(n.guia); setSalidaId(n.salidaId);
+    window.scrollTo({ top: 0 });
+  };
+  useEffect(() => {
+    const onPop = (e: PopStateEvent) => {
+      depth.current = (e.state && typeof e.state.depth === 'number') ? e.state.depth : 0;
+      const q = params();
+      const t = q.get('tab');
+      setTabState(isTab(t) ? t : 'explorar');
+      setGuia(q.has('guia'));
+      setSalidaId(q.get('salida'));
+      const pt = q.get('punto'); if (isPoint(pt)) setSelected(pt);
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, []);
 
-  const setTab = (t: Tab) => { setTabState(t); setGuia(false); window.scrollTo({ top: 0 }); };
+  const setTab = (t: Tab) => navigate({ tab: t, guia: false, salidaId: null });
   const nightScore = useCallback((pointId: string, night: string) => {
     const m = models[pointId as PointId]; if (!m) return null;
     return m.nights.find((n) => n.night === night)?.score ?? null;
@@ -80,13 +107,13 @@ export default function App() {
     const w = models[pointId as PointId]?.nights.find((n) => n.night === night)?.window;
     return w ? { start: w.start, end: w.end } : null;
   }, [models]);
-  const openSalida = (id: string) => { setTabState('salidas'); setGuia(false); setSalidaId(id); window.scrollTo({ top: 0 }); };
+  const openSalida = (id: string) => navigate({ tab: 'salidas', guia: false, salidaId: id });
   const point = pointById(selected);
 
   const explorar = (
     <main className="layout">
       <div className="map-wrap">
-        <MapView models={models} selected={selected} onSelect={(id) => { setSelected(id); setGuia(false); }} sats={sats.live} modo={modo} onMap={setMap} />
+        <MapView models={models} selected={selected} onSelect={(id) => { setSelected(id); if (guia) navigate({ tab, guia: false, salidaId }); }} sats={sats.live} modo={modo} onMap={setMap} />
         <PassChip pass={pass} />
         <WeatherLayers map={map} now={now} />
       </div>
@@ -108,7 +135,7 @@ export default function App() {
   else if (tab === 'salidas') content = (
     <main className="page">
       {salidaId
-        ? <Slot C={SalidaDetail} title="Salida" props={{ id: salidaId, nightScore, nightWindow, now, onBack: () => setSalidaId(null) }} />
+        ? <Slot C={SalidaDetail} title="Salida" props={{ id: salidaId, nightScore, nightWindow, now, onBack: () => (depth.current > 0 ? history.back() : navigate({ tab: 'salidas', guia: false, salidaId: null })) }} />
         : <>
           <Slot C={SalidasTab} title="Salidas de guías" note="El marketplace de salidas estará disponible en breve. Mientras tanto, las salidas de ejemplo están en Explorar, dentro de cada punto."
             props={{ nightScore, nightWindow, now, onOpenSalida: openSalida, initialPointId: selected }} />
@@ -138,7 +165,7 @@ export default function App() {
             <svg viewBox="0 0 24 24" aria-hidden><rect x="4" y="5" width="16" height="15" rx="2" /><path d="M4 10h16M9 3v4M15 3v4" /></svg>
             <span className="icon-txt">{sim ? 'Simulado' : 'Fecha'}</span>
           </button>
-          <button className="icon-btn" aria-pressed={guia} onClick={() => setGuia((x) => !x)} aria-label="Modo guía">
+          <button className="icon-btn" aria-pressed={guia} onClick={() => navigate({ tab, guia: !guia, salidaId: guia ? salidaId : null })} aria-label="Modo guía">
             <svg viewBox="0 0 24 24" aria-hidden><circle cx="12" cy="8" r="3.5" /><path d="M5 20c1-4 4-6 7-6s6 2 7 6" /></svg>
             <span className="icon-txt">{guia ? 'Modo guía' : 'Soy guía'}</span>
           </button>

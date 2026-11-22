@@ -53,6 +53,20 @@ export const GRID_EXTENT: [[number, number], [number, number]] = [
 /** Encuadre para `fitBounds` al activar una capa: la Puna jujeña. Los datos (GRID_EXTENT) la exceden en todos los lados
  *  para que la capa llene la pantalla en teléfono (vertical) y escritorio (horizontal). */
 export const GRID_BOUNDS: [[number, number], [number, number]] = [[-68.0, -25.0], [-64.6, -21.6]];
+/** Ancho del borde desvanecido de la capa, en grados (src/ui/capas/weatherLayer.ts). */
+export const GRID_FADE_DEG = 0.3;
+
+/** Encuadre que llena un viewport de `widthPx × heightPx` sin salir de los datos (menos el borde desvanecido),
+ *  centrado en la Puna. Usar en lugar de GRID_BOUNDS cuando importa que la capa cubra toda la pantalla. */
+export function gridViewBounds(widthPx: number, heightPx: number, center = { lat: -23.49, lon: -66.21 }): [[number, number], [number, number]] {
+  const [[W, S], [E, N]] = GRID_EXTENT, f = GRID_FADE_DEG;
+  const halfLon = Math.min(center.lon - (W + f), E - f - center.lon), halfLat = Math.min(center.lat - (S + f), N - f - center.lat);
+  const k = 1 / Math.cos((center.lat * Math.PI) / 180); // Mercator: un grado de latitud ocupa k veces más que uno de longitud
+  const s = Math.max(widthPx / (2 * halfLon), heightPx / (2 * k * halfLat)); // px por grado de longitud
+  const dLon = widthPx / (2 * s), dLat = heightPx / (2 * s * k);
+  return [[r3(center.lon - dLon), r3(center.lat - dLat)], [r3(center.lon + dLon), r3(center.lat + dLat)]];
+}
+
 const TTL = 3600_000;
 const RAW_MAP: Record<RawVar, string> = {
   cloud_total: 'cloud_cover', cloud_low: 'cloud_cover_low', cloud_mid: 'cloud_cover_mid', cloud_high: 'cloud_cover_high',

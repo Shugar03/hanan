@@ -41,4 +41,18 @@ npx playwright show-report report                            # reporte HTML
 | 12a/b | Nombres accesibles; targets ≥ 44 px en mobile | §5 |
 | 13 | Sin errores de consola (excepto red de tiles del mapa) | — |
 
+| 14a/b/c | 4 pestañas con nombre + `aria-current`; deep links; back del navegador | visión §3 |
+| 15a–e | Cielo: canvas con contenido, ficha con altura/azimut al tocar, N/E/S/O + arrastre, slider de hora, modo rojo sin azules en píxeles | visión §3, §8 |
+| 16a–d | Salidas: feed "ejemplo" + score; orden por precio; filtro por punto; ficha + garantía; reserva 2 personas (seña 30 %), wa.me, `.ics`, Mis reservas tras reload; tope de cupos | visión §4 |
+| 17 | Mismo score Susques viernes 27 en Explorar / Salidas / Mi noche | consistencia |
+| 18 | Modo guía · crear salida completa: validación y aparece en el feed como "Tuya" | visión §3, §4 |
+| 19a/b | Mi noche: Vía Láctea + sin auto + Tilcara → 3 planes con porqué/checklist/salida de guía; guardar, reload y offline | visión §5 |
+| 20 | Capas Nubes y Score: leyenda, scrubber y píxeles pintados en el mapa | visión §3 |
+| 21a/b | Mobile: tab bar no tapa Reservar; targets ≥ 44 px | spec §5 |
+
+## APIs externas
+`tests/base.ts` intercepta Open-Meteo y CelesTrak y responde con `../fixtures/` (cada test abre un contexto sin caché; sin esto la suite
+recibía 429 de Open-Meteo y arriesgaba el bloqueo de IP de CelesTrak). Para pegarle a la red real: `HANAN_E2E_RED_REAL=1`.
+Los tiles del mapa sí van a la red.
+
 Resultados: `e2e/test-results/` (screenshots de fallos, traces en el primer retry) y `e2e/report/`.

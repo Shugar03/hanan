@@ -170,7 +170,7 @@
 .capas-cats { list-style: none; margin: 2px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px var(--space-3); }
 .capas-cats li { display: inline-flex; align-items: center; gap: 6px; font-size: var(--size-xs); color: var(--text); white-space: nowrap; }
 .capas-cats li span { color: var(--text-2); font-variant-numeric: tabular-nums; }
-.capas-cats i { width: 8px; height: 8px; border-radius: 50%; box-shadow: 0 0 0 1px var(--border); }
+.capas-cats i { width: 9px; height: 9px; border-radius: 50%; box-shadow: 0 0 0 1px var(--text-2); }
 .capas-attrib { margin: 0; font-size: 11px; color: var(--text-2); }
 
 @media (prefers-reduced-motion: reduce) {

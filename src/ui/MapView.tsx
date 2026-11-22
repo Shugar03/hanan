@@ -9,6 +9,14 @@ import { POINTS, shortName } from '../data/points';
 
 setWorkerUrl(workerUrl);
 
+const views = new WeakMap<MLMap, { custom: (() => void) | null; fitPoints: (duration?: number) => void }>();
+/** Cambia el encuadre del mapa: una función de encuadre propia (p. ej. la grilla de capas) o null para volver a los 6 puntos. */
+export function setMapView(m: MLMap, custom: (() => void) | null) {
+  const v = views.get(m); if (!v) return;
+  v.custom = custom;
+  if (custom) custom(); else v.fitPoints(400);
+}
+
 /** El nombre va pegado al pin, a la derecha; si no entra antes del borde del mapa, a la izquierda. */
 function placeNames(box: HTMLElement | null, pins: Iterable<{ el: HTMLButtonElement }>) {
   if (!box) return;
@@ -77,7 +85,10 @@ export function MapView({ models, selected, onSelect, sats, modo, onMap }: Props
     map.current = m;
     const b = new LngLatBounds();
     POINTS.forEach((p) => b.extend([p.lon, p.lat]));
-    const fit = () => box.current && box.current.clientHeight > 150 && m.fitBounds(b, { padding: box.current.clientWidth < 600 ? { top: 44, bottom: 72, left: 40, right: 40 } : { top: 72, bottom: 80, left: 72, right: 180 }, duration: 0, maxZoom: 9 });
+    const fitPoints = (duration = 0) => box.current && box.current.clientHeight > 150 && m.fitBounds(b, { padding: box.current.clientWidth < 600 ? { top: 44, bottom: 72, left: 40, right: 40 } : { top: 72, bottom: 80, left: 72, right: 180 }, duration, maxZoom: 9 });
+    // Encuadre actual: los 6 puntos, o el que fije una capa (setMapView). Se re-aplica al cambiar el tamaño.
+    views.set(m, { custom: null, fitPoints });
+    const fit = () => { const v = views.get(m); if (v?.custom) v.custom(); else fitPoints(); };
     fit();
     const ro = new ResizeObserver(() => { m.resize(); fit(); });
     ro.observe(box.current);

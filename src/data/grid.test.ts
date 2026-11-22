@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { astroAtCenter, bilinear, fixtureGrid, gridCoords, nearestCell, sampleGrid, sampleWindUV, timeIndex, GRID_BOUNDS, GRID_EXTENT, GRID_VARS } from './grid';
+import { astroAtCenter, bilinear, fixtureGrid, gridCoords, nearestCell, sampleGrid, sampleWindUV, timeIndex, gridViewBounds, GRID_BOUNDS, GRID_EXTENT, GRID_VARS } from './grid';
 import { POINTS } from './points';
 import { factorsFrom, scoreHour } from '../sky/score';
 import { parseLocal } from '../sky/time';
@@ -23,6 +23,15 @@ describe('grilla Open-Meteo', () => {
     const [[w, s], [e, nn]] = GRID_BOUNDS, [[W, S], [E, N]] = GRID_EXTENT;
     expect(w - W).toBeGreaterThanOrEqual(0.3 - 1e-9); expect(E - e).toBeGreaterThanOrEqual(0.3 - 1e-9);
     expect(s - S).toBeGreaterThanOrEqual(0.3); expect(N - nn).toBeGreaterThanOrEqual(0.3);
+  });
+
+  test('gridViewBounds: encuadre dentro de los datos para teléfono y escritorio, con los 6 puntos adentro', () => {
+    for (const [w, h] of [[390, 844], [1440, 900], [800, 600]]) {
+      const [[bw, bs], [be, bn]] = gridViewBounds(w, h), [[W, S], [E, N]] = GRID_EXTENT;
+      expect(bw).toBeGreaterThanOrEqual(W + 0.3 - 1e-6); expect(be).toBeLessThanOrEqual(E - 0.3 + 1e-6);
+      expect(bs).toBeGreaterThanOrEqual(S + 0.3 - 1e-6); expect(bn).toBeLessThanOrEqual(N - 0.3 + 1e-6);
+      for (const p of POINTS) { expect(p.lon).toBeGreaterThan(bw); expect(p.lon).toBeLessThan(be); expect(p.lat).toBeGreaterThan(bs); expect(p.lat).toBeLessThan(bn); }
+    }
   });
 
   test('la grilla cubre los 6 puntos con margen', () => {

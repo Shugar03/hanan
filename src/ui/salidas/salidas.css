@@ -124,6 +124,9 @@ div.sx-card { cursor: default; }
 .sx-inc li::before { content: ""; position: absolute; left: 4px; top: 50%; width: 8px; height: 1px; background: var(--accent); }
 .sx-bar { position: sticky; bottom: 0; z-index: 30; margin: 0 calc(-1 * var(--sx-pad)) calc(-1 * var(--space-12)); display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
   padding: var(--space-3) var(--space-4); padding-bottom: max(var(--space-3), env(safe-area-inset-bottom)); background: var(--bg); border-top: 1px solid var(--border); }
+/* Hanan shell: en mobile la barra de pestañas está fija abajo; la barra de reserva queda justo encima, sin taparla. */
+.sx-bar { bottom: calc(var(--tabbar-h, 0px) + env(safe-area-inset-bottom)); }
+@media (max-width: 959px) { .sx-bar { padding-bottom: var(--space-3); } }
 .sx-bar-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .sx-bar-info .sx-price { justify-content: flex-start; }
 .sx-bar .sx-btn { flex: none; min-width: 140px; }

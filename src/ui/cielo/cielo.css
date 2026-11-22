@@ -20,7 +20,7 @@
   background: color-mix(in srgb, var(--surface) 80%, transparent); padding: 2px;
 }
 .cielo-dirs button {
-  min-width: 36px; min-height: 36px; border: 0; background: transparent; color: var(--text-2); border-radius: var(--radius-pill);
+  min-width: 44px; min-height: 44px; border: 0; background: transparent; color: var(--text-2); border-radius: var(--radius-pill);
   font-size: var(--size-xs); font-weight: 600; cursor: pointer;
 }
 .cielo-dirs button[aria-pressed="true"] { color: var(--on-accent); background: var(--accent); }
@@ -34,7 +34,7 @@
 .cielo-hh { font-family: var(--font-datos); font-size: var(--size-xl); font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
 .cielo-day { font-size: var(--size-xs); color: var(--text-2); }
 .cielo-now {
-  margin-left: auto; align-self: center; min-height: 36px; padding: 0 var(--space-4); border-radius: var(--radius-pill);
+  margin-left: auto; align-self: center; min-height: 44px; min-width: 44px; padding: 0 var(--space-4); border-radius: var(--radius-pill);
   border: 1px solid var(--accent); background: transparent; color: var(--accent); font-size: var(--size-sm); font-weight: 600; cursor: pointer;
 }
 .cielo-now:active { background: var(--accent); color: var(--on-accent); }

@@ -261,6 +261,25 @@
   .steps.three { margin-top:60px; }
   .closing .lockup { width:480px; }
   .closing .lockup svg { width:100%; height:auto; display:block; }
+
+  /* ---- v3: capturas reales ---- */
+  .phone { background:#1E2027; border-radius:34px; padding:7px; flex:none; }
+  .phone img { display:block; width:100%; height:auto; border-radius:28px; }
+  .tabs.shots { max-height:none; flex:none; margin-top:30px; gap:24px; }
+  .tabs.shots .tab { display:flex; flex-direction:column; align-items:flex-start; }
+  .tabs.shots .phone { width:236px; }
+  .tabs.shots h3 { font-size:34px; margin:20px 0 2px; }
+  .tabs.shots .src2 { font-family:var(--font-datos); color:var(--accent); font-size:18px; }
+  .tabs.shots p { font-size:19px; line-height:1.4; color:var(--text-2); margin-top:6px; max-width:340px; }
+  .slide .guiabar { margin-top:22px; padding:18px 30px; font-size:22px; }
+  .mkt.withshot { grid-template-columns:1fr 0.78fr 280px; gap:32px; max-height:none; flex:none; align-items:start; }
+  .mkt.withshot .flow li { font-size:21px; padding:22px 26px; }
+  .mkt.withshot .flow { gap:14px; }
+  .mkt.withshot .guarantee { align-self:stretch; padding:34px 34px; }
+  .mkt.withshot .guarantee .gt { font-size:34px; }
+  .mkt.withshot .guarantee .gv { font-size:210px; margin:40px 0 10px; }
+  .mkt.withshot .guarantee p { font-size:23px; }
+  .mkt.withshot .phone { width:280px; }
 </style>
 </head>
 <body>
@@ -399,14 +418,13 @@
   <section class="slide">
     <div class="kicker"><span class="n">05</span> — El producto</div>
     <h2 class="sol-title">Cuatro pestañas reemplazan a cinco apps</h2>
-    <div class="tabs">
-      <div class="pcol"><h3>Explorar</h3><div class="src2">como Ventusky</div><p>Mapa de la Puna con capas de nubes, viento y score de cielo, hora por hora.</p></div>
-      <div class="pcol"><h3>Cielo</h3><div class="src2">como Stellarium</div><p>Planetario en vivo desde tu punto: estrellas, planetas, Vía Láctea y satélites.</p></div>
-      <div class="pcol"><h3>Salidas</h3><div class="src2">como Luma</div><p>Marketplace de salidas de guías, ordenadas por el cielo de esa noche.</p></div>
-      <div class="pcol"><h3>Mi noche</h3><div class="src2">planificador</div><p>Recomendaciones de punto, noche y horario según tu objetivo y tu equipo.</p></div>
+    <div class="tabs shots">
+      <div class="tab"><div class="phone"><img src="app/explorar.png" alt="Pestaña Explorar: mapa de la Puna con el score de cada punto"></div><h3>Explorar</h3><div class="src2">como Ventusky</div><p>Mapa con capas de nubes, viento y score, hora por hora.</p></div>
+      <div class="tab"><div class="phone"><img src="app/cielo.png" alt="Pestaña Cielo: planetario en vivo desde Susques"></div><h3>Cielo</h3><div class="src2">como Stellarium</div><p>Planetario en vivo: estrellas, planetas y satélites.</p></div>
+      <div class="tab"><div class="phone"><img src="app/salidas.png" alt="Pestaña Salidas: feed de salidas de guías"></div><h3>Salidas</h3><div class="src2">como Luma</div><p>Salidas de guías ordenadas por el cielo de la noche.</p></div>
+      <div class="tab"><div class="phone"><img src="app/mi-noche.png" alt="Pestaña Mi noche: plan recomendado con su porqué"></div><h3>Mi noche</h3><div class="src2">planificador</div><p>Punto, noche y horario según tu objetivo y tu equipo.</p></div>
     </div>
     <div class="guiabar"><b>Modo guía</b> Crear salidas, ver demanda y reservas, reprogramar con un toque.</div>
-    <div class="demo">[ <b>DEMO EN VIVO</b> ]</div>
     <div class="counter">05 / 09</div>
     <div class="notes">Cuatro pestañas: Explorar para planificar, Cielo para mirar en el salar, Salidas para reservar y Mi noche para el aficionado que va por su cuenta. El guía cambia de rol y opera sus salidas. Acá va la demo en vivo.</div>
   </section>
@@ -415,7 +433,7 @@
   <section class="slide">
     <div class="kicker"><span class="n">06</span> — Marketplace</div>
     <h2 class="sol-title">Como Uber o Luma, pero para la noche de la Puna</h2>
-    <div class="mkt">
+    <div class="mkt withshot">
       <ol class="flow">
         <li><b>El guía habilitado publica</b> su salida: punto, fecha, cupo y <b>su propio precio</b>.</li>
         <li><b>El turista ve la ficha</b> con el cielo de esa noche: score, luna y qué se ve.</li>
@@ -427,6 +445,7 @@
         <div class="gv">&lt; 40</div>
         <p>Si a <b>T−6 h</b> el score de la noche cae por debajo de 40, la salida se reprograma o se reintegra la seña.</p>
       </div>
+      <div class="phone"><img src="app/ficha.png" alt="Ficha de una salida con el cielo de esa noche y el botón Reservar"></div>
     </div>
     <div class="src">Fuentes: Ley provincial 6308 y Decreto 7843-CyT-23 (Registro Único de Guías de Turismo de Jujuy)</div>
     <div class="counter">06 / 09</div>

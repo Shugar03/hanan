@@ -3,17 +3,16 @@
 // Viento: además, partículas animadas en un canvas superpuesto (debajo de los pines, que son HTML).
 import type * as maplibregl from 'maplibre-gl';
 import type { CanvasSource } from 'maplibre-gl';
-import { astroAtCenter, bilinear, sampleGrid, sampleWindUV, type Grid, type GridVar } from '../../data/grid';
+import { astroAtCenter, bilinear, GRID_FADE_DEG, sampleGrid, sampleWindUV, type Grid, type GridVar } from '../../data/grid';
 import { currentModo, lut, RAMPS, type Modo } from './colormaps';
 
 const SRC = 'hanan-capa';
 const LAYER = 'hanan-capa';
-const PX_PER_CELL = 28;
+const PX_PER_CELL = 22;
 const OPACITY = 0.72;
-/** Ancho del desvanecido del borde, en grados. */
-const FADE_DEG = 0.3;
+const FADE_DEG = GRID_FADE_DEG;
 const ISO_STEP = 3;
-const ISO_W = 1.3;
+const ISO_W = 1.1;
 
 export type WeatherLayer = { setVariable(v: GridVar): void; setTime(d: Date): void; setVisible(b: boolean): void; destroy(): void };
 
@@ -31,7 +30,7 @@ export function attachWeatherLayer(map: maplibregl.Map, grid: Grid): WeatherLaye
 
   const canvas = document.createElement('canvas');
   canvas.width = W; canvas.height = H;
-  const ctx = canvas.getContext('2d')!;
+  const ctx = canvas.getContext('2d', { willReadFrequently: true })!;
   const img = ctx.createImageData(W, H);
 
   let variable: GridVar = 'cloud_total';
@@ -40,7 +39,7 @@ export function attachWeatherLayer(map: maplibregl.Map, grid: Grid): WeatherLaye
   let modo: Modo = currentModo();
   let destroyed = false;
   let added = false;
-  let pauseTimer: ReturnType<typeof setTimeout> | undefined;
+  let pauseOnRender: (() => void) | undefined;
 
   // ---------- raster ----------
   const field = new Float32Array(W * H);
@@ -69,8 +68,9 @@ export function attachWeatherLayer(map: maplibregl.Map, grid: Grid): WeatherLaye
   function isolines(levels: number[]) {
     const S = ISO_STEP, cols = Math.floor((W - 1) / S), rows = Math.floor((H - 1) / S);
     const f = (cx: number, cy: number) => field[cy * S * W + cx * S];
-    const dark = modo === 'rojo' ? 'rgba(0,0,0,0.55)' : 'rgba(10,11,15,0.38)';
-    const light = modo === 'rojo' ? 'rgba(255,77,77,0.6)' : 'rgba(244,239,230,0.55)';
+    const dark = modo === 'rojo' ? 'rgba(0,0,0,0.6)' : 'rgba(10,11,15,0.4)';
+    const light = modo === 'rojo' ? 'rgba(255,77,77,0.6)' : 'rgba(244,239,230,0.5)';
+    const r = RAMPS[variable], table = lut(variable, modo);
     ctx.lineJoin = 'round'; ctx.lineCap = 'round';
     for (const L of levels) {
       ctx.beginPath();
@@ -95,8 +95,10 @@ export function attachWeatherLayer(map: maplibregl.Map, grid: Grid): WeatherLaye
           case 10: seg(top(), right()); seg(left(), bottom()); break;
         }
       }
-      ctx.strokeStyle = dark; ctx.lineWidth = ISO_W * 2.6; ctx.stroke();
-      ctx.strokeStyle = light; ctx.lineWidth = ISO_W; ctx.stroke();
+      // Una sola línea fina que contrasta con el color del campo en ese nivel.
+      const i = Math.max(0, Math.min(255, Math.round(((L - r.min) / (r.max - r.min)) * 255))) * 4;
+      const lum = (0.2126 * table[i] + 0.7152 * table[i + 1] + 0.0722 * table[i + 2]) / 255;
+      ctx.strokeStyle = lum > 0.45 ? dark : light; ctx.lineWidth = ISO_W; ctx.stroke();
     }
   }
 
@@ -127,8 +129,14 @@ export function attachWeatherLayer(map: maplibregl.Map, grid: Grid): WeatherLaye
     if (src) {
       // Canvas estático: se copia a la textura durante unos cuadros y se vuelve a pausar (no se re-sube en cada frame).
       src.play(); map.triggerRepaint();
-      clearTimeout(pauseTimer);
-      pauseTimer = setTimeout(() => { if (!destroyed && map.getSource(SRC)) src.pause(); }, 400);
+      if (pauseOnRender) map.off('render', pauseOnRender);
+      let frames = 0;
+      pauseOnRender = () => {
+        if (++frames < 3) { map.triggerRepaint(); return; }
+        map.off('render', pauseOnRender!); pauseOnRender = undefined;
+        if (!destroyed && map.getSource(SRC)) src.pause();
+      };
+      map.on('render', pauseOnRender);
     }
   }
 
@@ -284,7 +292,7 @@ export function attachWeatherLayer(map: maplibregl.Map, grid: Grid): WeatherLaye
     },
     destroy() {
       destroyed = true;
-      clearTimeout(pauseTimer);
+      if (pauseOnRender) map.off('render', pauseOnRender);
       if (raf) cancelAnimationFrame(raf);
       mo.disconnect();
       map.off('move', onMove); map.off('resize', onResize); map.off('load', add); map.off('idle', onIdle);
