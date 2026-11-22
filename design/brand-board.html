@@ -44,12 +44,12 @@
     content:""; position:absolute; inset:0;
     background:radial-gradient(60% 80% at 50% 110%, rgba(42,53,102,0.35), transparent 70%);
   }
-  .hero .lockup { width:520px; position:relative; }
+  .hero .lockup { width:600px; position:relative; }
   .hero .phrase {
-    margin-top:26px;
+    margin-top:28px;
     font-family:var(--font-display);
     font-weight:600;
-    font-size:30px;
+    font-size:34px;
     color:var(--sal);
     letter-spacing:0.01em;
     position:relative;
@@ -60,15 +60,15 @@
   .construction { grid-column:8 / span 5; grid-row:1; }
   .construction .gridwrap {
     position:absolute; left:50%; top:56%; transform:translate(-50%,-50%);
-    width:340px; height:340px;
+    width:400px; height:400px;
   }
   .construction svg.markgrid { width:100%; height:100%; display:block; }
 
   /* ---------- 03 PALETA ---------- */
   .palette { grid-column:1 / span 2; grid-row:2; display:flex; flex-direction:column; }
-  .sw { display:flex; align-items:center; gap:14px; padding:9px 0; border-bottom:1px solid rgba(42,53,102,0.5); }
+  .sw { display:flex; align-items:center; gap:14px; padding:6px 0; border-bottom:1px solid rgba(42,53,102,0.5); }
   .sw:last-child { border-bottom:none; }
-  .chip { width:56px; height:34px; border-radius:6px; flex:none; border:1px solid rgba(238,234,224,0.08); }
+  .chip { width:56px; height:28px; border-radius:6px; flex:none; border:1px solid rgba(142,147,168,0.4); }
   .sw .nm { font-family:var(--font-datos); font-size:12px; color:var(--sal); }
   .sw .hx { font-family:var(--font-datos); font-size:11px; color:var(--ceniza); margin-top:2px; }
   .sw.sec { margin-top:14px; }
@@ -186,7 +186,7 @@
   <section class="panel hero">
     <div class="tag"><b>01</b> — Portada</div>
     <div class="lockup">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 56" width="520" height="171">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 56" width="600" height="198">
         <style>
           @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600&amp;family=IBM+Plex+Mono:wght@400&amp;display=swap');
           .wm { font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 600; fill: #EEEAE0; letter-spacing: 0.02em; }
@@ -212,7 +212,7 @@
   <section class="panel construction">
     <div class="tag"><b>02</b> — Construcción del isotipo</div>
     <div class="gridwrap">
-      <svg class="markgrid" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <svg class="markgrid" viewBox="0 0 24 24" width="400" height="400" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <pattern id="gr" width="1" height="1" patternUnits="userSpaceOnUse">
             <path d="M 1 0 L 0 0 0 1" fill="none" stroke="#2A3566" stroke-width="0.05"/>
@@ -226,13 +226,13 @@
         <circle cx="15.8" cy="6.6" r="1" fill="#E8C468"/>
         <circle cx="12.8" cy="13" r="1.4" fill="#E8C468"/>
         <circle cx="14.7" cy="10.6" r="0.6" fill="#E8C468"/>
-        <g font-family="'IBM Plex Mono', monospace" font-size="1.5" fill="#8C93A8">
-          <text x="12.9" y="2.6">γ</text>
-          <text x="6.6" y="7.4">β</text>
-          <text x="16.9" y="6.4">δ</text>
-          <text x="10.9" y="14.6">α</text>
-          <text x="16.6" y="15.6" transform="rotate(0)">órbita</text>
-          <text x="17.4" y="18.6">horizonte</text>
+        <g font-family="'IBM Plex Mono', monospace" font-size="1.6" fill="#8C93A8">
+          <text x="13.7" y="2.4">γ</text>
+          <text x="5.6" y="7.5">β</text>
+          <text x="17" y="6.5">δ</text>
+          <text x="10.7" y="16.1">α</text>
+          <text x="17.5" y="12.4">órbita</text>
+          <text x="22.6" y="18.7" text-anchor="end">horizonte</text>
         </g>
       </svg>
     </div>
@@ -287,7 +287,7 @@
           <svg class="m" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><line x1="2" y1="17" x2="22" y2="17" stroke="#EEEAE0" stroke-width="1.5" stroke-linecap="round"/><path d="M 4 19.5 A 14 6 -20 0 0 21 9" fill="none" stroke="#EEEAE0" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="3.2" r="1.4" fill="#E8C468"/><circle cx="8.2" cy="7.6" r="1.2" fill="#E8C468"/><circle cx="15.8" cy="6.6" r="1" fill="#E8C468"/><circle cx="12.8" cy="13" r="1.4" fill="#E8C468"/><circle cx="14.7" cy="10.6" r="0.6" fill="#E8C468"/></svg>
           Susques · 3.605 m
         </div>
-        <div class="psub">PUNTA DE PIES · SALAR DE PÓMEROS</div>
+        <div class="psub">COAS · RUTA DE LAS ESTRELLAS</div>
         <div class="scorewrap">
           <div class="score">86</div>
           <div class="scorelab">Muy bueno<small>score de cielo · ahora</small></div>
@@ -333,7 +333,7 @@
           <svg class="m" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><line x1="2" y1="17" x2="22" y2="17" stroke="#FF4D4D" stroke-width="1.5" stroke-linecap="round"/><path d="M 4 19.5 A 14 6 -20 0 0 21 9" fill="none" stroke="#FF4D4D" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="3.2" r="1.4" fill="#FF4D4D"/><circle cx="8.2" cy="7.6" r="1.2" fill="#FF4D4D"/><circle cx="15.8" cy="6.6" r="1" fill="#FF4D4D"/><circle cx="12.8" cy="13" r="1.4" fill="#FF4D4D"/><circle cx="14.7" cy="10.6" r="0.6" fill="#FF4D4D"/></svg>
           Susques · 3.605 m
         </div>
-        <div class="psub">PUNTA DE PIES · SALAR DE PÓMEROS</div>
+        <div class="psub">COAS · RUTA DE LAS ESTRELLAS</div>
         <div class="scorewrap">
           <div class="score">86</div>
           <div class="scorelab">Muy bueno<small>score de cielo · ahora</small></div>
@@ -700,7 +700,7 @@
 <rect x="24" y="24" width="1.02" height="1.02" fill="#0B0F1E"/>
 </svg>
         </div>
-        <div class="cap"><b>COAS SUSQUES</b><br>redescubrí la Puna · sep 2025</div>
+        <div class="cap"><b>COAS SUSQUES</b><br>inaugurado en sep 2025</div>
       </div>
     </div>
   </section>
