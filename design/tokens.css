@@ -1,0 +1,55 @@
+/* Hanan · cielos de la Puna — design tokens (espejo de tokens.json) */
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+
+:root {
+  --noche: #0B0F1E;
+  --noche-2: #141A30;
+  --indigo: #2A3566;
+  --sal: #EEEAE0;
+  --ceniza: #8C93A8;
+  --ocre: #C96A3A;
+  --oro-estelar: #E8C468;
+  --score-bueno: #6FCF97;
+  --score-medio: #E8C468;
+  --score-malo: #C96A3A;
+
+  --rojo-fondo: #000000;
+  --rojo-superficie: #1A0505;
+  --rojo-borde: #3A0A0A;
+  --rojo-tenue: #8A1C1C;
+  --rojo-texto-2: #C43A3A;
+  --rojo-texto: #FF4D4D;
+
+  --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
+  --font-texto: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-datos: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --size-xs: 12px; --size-sm: 14px; --size-md: 16px; --size-lg: 20px;
+  --size-xl: 28px; --size-2xl: 40px; --size-3xl: 64px;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-6: 24px; --space-8: 32px; --space-12: 48px;
+  --radius-sm: 6px; --radius-md: 12px; --radius-lg: 20px;
+
+  /* Roles semánticos (los componentes usan solo estos) */
+  --bg: var(--noche);
+  --surface: var(--noche-2);
+  --border: var(--indigo);
+  --text: var(--sal);
+  --text-2: var(--ceniza);
+  --accent: var(--oro-estelar);
+  --accent-warm: var(--ocre);
+}
+
+/* Modo visión nocturna: sin azules ni blancos para preservar la adaptación a la oscuridad */
+[data-modo="rojo"] {
+  --bg: var(--rojo-fondo);
+  --surface: var(--rojo-superficie);
+  --border: var(--rojo-borde);
+  --text: var(--rojo-texto);
+  --text-2: var(--rojo-texto-2);
+  --accent: var(--rojo-texto);
+  --accent-warm: var(--rojo-texto-2);
+  --score-bueno: var(--rojo-texto);
+  --score-medio: var(--rojo-texto);
+  --score-malo: var(--rojo-texto);  /* en modo rojo el score se distingue por número + etiqueta, no por color */
+}
