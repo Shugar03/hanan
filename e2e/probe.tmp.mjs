@@ -1,0 +1,10 @@
+import { chromium } from '@playwright/test';
+const b = await chromium.launch({args:['--use-fake-ui-for-media-stream','--use-fake-device-for-media-stream']}); const c = await b.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,colorScheme:'light',permissions:['camera']}); const p = await c.newPage();
+p.on('pageerror', e=>console.log('PAGEERROR', e.message));
+await p.route(/open-meteo|celestrak/, r=>r.abort());
+await p.goto('http://localhost:4173/'); await p.waitForTimeout(1500);
+console.log(await p.evaluate(()=>document.documentElement.dataset.tema), await p.getByRole('banner').ariaSnapshot());
+await p.getByRole('button',{name:'Abrir modo observatorio'}).first().click(); await p.waitForTimeout(2500);
+console.log(p.url()); console.log(await p.getByRole('dialog').ariaSnapshot());
+console.log(await p.evaluate(()=>{const v=document.querySelector('dialog video, [role=dialog] video'); return v&&[v.readyState, v.videoWidth]}));
+await b.close();

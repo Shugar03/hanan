@@ -49,6 +49,11 @@ npx playwright show-report report                            # reporte HTML
 | 19a/b | Mi noche: Vía Láctea + sin auto + Tilcara → 3 planes con porqué/checklist/salida de guía; guardar, reload y offline | visión §5 |
 | 20 | Capas Nubes y Score: leyenda, scrubber y píxeles pintados en el mapa | visión §3 |
 | 21a/b | Mobile: tab bar no tapa Reservar; targets ≥ 44 px | spec §5 |
+| 22a–e | Tema claro: default por `prefers-color-scheme`, toggle "Tema claro/oscuro" persistente, aria-disabled con modo rojo (y el rojo gana), contraste AA en claro | brand §5, ui-audit P1-1 |
+| 23a–f | Observatorio con cámara falsa (`--use-fake-device-for-media-stream`): botón ≥ 44 px, diálogo modal full screen, video readyState ≥ 2, overlay, `obs=1`, back/Esc cierran y apagan tracks, HUD con `DeviceOrientationEvent`, "Sin brújula", alinear + calibración persistente | observatorio |
+| 23g | Sin cámara ni permiso → "Sin cámara: modo planetario" con overlay | observatorio |
+
+Los specs de observatorio usan `launchOptions` a nivel de archivo (worker propio): `v3-observatorio.spec.ts` (cámara falsa) y `v3-observatorio-sin-camara.spec.ts`.
 
 ## APIs externas
 `tests/base.ts` intercepta Open-Meteo y CelesTrak y responde con `../fixtures/` (cada test abre un contexto sin caché; sin esto la suite
