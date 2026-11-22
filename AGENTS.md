@@ -1,6 +1,6 @@
 # AGENTS.md — Hanan
 
-Glosario del dominio: `CONTEXT.md` (usar sus términos en código, UI y docs). Producto: `docs/product/spec.md`. Arquitectura y contratos: `docs/tech/architecture.md`. Decisiones: `docs/adr/`. Marca y tokens: `docs/brand/brand-guide.md`, `design/tokens.json`.
+Producto: `docs/product/product-vision.md` (manda sobre la spec). Glosario del dominio: `CONTEXT.md` (usar sus términos en código, UI y docs). Producto: `docs/product/spec.md`. Arquitectura y contratos: `docs/tech/architecture.md`. Decisiones: `docs/adr/`. Marca y tokens: `docs/brand/brand-guide.md`, `design/tokens.json`.
 
 ## Reglas que no están en la configuración
 - **Offline-first:** todo lo astronómico y orbital se calcula en el cliente; `src/sky/` es puro (sin I/O, recibe `Date`). La app y los tests corren con los fixtures de `poc/samples/` sin red.
@@ -15,4 +15,10 @@ Glosario del dominio: `CONTEXT.md` (usar sus términos en código, UI y docs). P
 - **Cloudflare:** usar el CLI `cf` (no hay configuración de Wrangler en el repo).
 
 ## Verificación
-Tests de `src/sky/` contra fixtures (casos T1–T6 de la spec) + build. Antes de una demo: probar en modo avión.
+`npm test` + `npm run build` + E2E (`e2e/`, contra `vite preview --port 4173`; la suite stubea Open-Meteo y CelesTrak con `fixtures/`, no le pega a la red). Antes de una demo: probar en modo avión.
+
+## Convenciones de la app
+- Una sola métrica por noche: `scoreNight()` en `src/sky/night.ts`. Toda pantalla que muestre el cielo de una noche la usa.
+- Navegación por URL (`?tab=…&punto=…`) con `pushState`; el back del navegador no debe salir de la app.
+- Módulos opcionales se cargan con `import.meta.glob` (`src/ui/Optional.tsx`) para no romper el build.
+- Targets táctiles ≥ 44 px; la barra de pestañas mobile reserva `--tabbar-h`.

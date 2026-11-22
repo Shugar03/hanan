@@ -16,6 +16,11 @@ export function setMapView(m: MLMap, custom: (() => void) | null) {
   v.custom = custom;
   if (custom) custom(); else v.fitPoints(400);
 }
+/** Re-aplica el encuadre vigente (p. ej. cuando cambia el alto de un overlay). */
+export function refitMapView(m: MLMap) {
+  const v = views.get(m); if (!v) return;
+  if (v.custom) v.custom(); else v.fitPoints();
+}
 
 /** El nombre va pegado al pin, a la derecha; si no entra antes del borde del mapa, a la izquierda. */
 function placeNames(box: HTMLElement | null, pins: Iterable<{ el: HTMLButtonElement }>) {
@@ -92,7 +97,11 @@ export function MapView({ models, selected, onSelect, sats, modo, onMap }: Props
     fit();
     const ro = new ResizeObserver(() => { m.resize(); fit(); });
     ro.observe(box.current);
-    m.on('load', () => onMapRef.current?.(m));
+    // Avisar apenas el estilo está listo (no esperar a que bajen todos los tiles, que sin red tardan o fallan).
+    let announced = false;
+    const announce = () => { if (announced || !m.isStyleLoaded()) return; announced = true; onMapRef.current?.(m); };
+    m.on('styledata', announce);
+    m.on('load', announce);
     m.on('load', () => {
       m.addSource('rn52', { type: 'geojson', data: { type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: RN52 } } });
       m.addLayer({ id: 'rn52', type: 'line', source: 'rn52', paint: { 'line-color': cssVar('--text-2'), 'line-width': 1.5, 'line-dasharray': [2, 2], 'line-opacity': 0.7 } });

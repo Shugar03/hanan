@@ -1,7 +1,7 @@
 // Host de las capas meteorológicas (agente F: src/ui/capas/** y src/data/grid.ts).
 // Si esos módulos no existen o fallan, no se muestra nada y el mapa sigue funcionando.
 import { useEffect, useRef, useState } from 'react';
-import { setMapView } from './MapView';
+import { refitMapView, setMapView } from './MapView';
 import type { Map as MLMap } from 'maplibre-gl';
 import { Slot, ext, optional } from './Optional';
 
@@ -14,15 +14,21 @@ export function WeatherLayers({ map, now }: { map: MLMap | null; now: Date }) {
   const [time, setTime] = useState<Date>(now);
   const gridMod = useRef<Record<string, any> | null>(null);
   const framed = useRef(false);
+  const hostRef = useRef<HTMLDivElement>(null);
+  const sel = useRef<{ variable: string | null; time: Date }>({ variable: null, time: now });
+  sel.current = { variable, time };
   /** Primera vez que se activa una capa: encuadre de la grilla (gridViewBounds). Al apagarla: los 6 puntos. */
   const frame = (on: boolean) => {
     if (!map) return;
     if (on && !framed.current && gridMod.current?.gridViewBounds) {
       framed.current = true;
-      setMapView(map, () => {
+      // En mobile la franja de capas ocupa el borde inferior: la grilla llena solo el área visible de arriba.
+      const fitGrid = () => {
         const c = map.getContainer();
-        map.fitBounds(gridMod.current!.gridViewBounds(c.clientWidth, c.clientHeight), { padding: 0, duration: 0 });
-      });
+        const ph = c.clientWidth < 720 ? (hostRef.current?.offsetHeight ?? 0) + 8 : 0;
+        map.fitBounds(gridMod.current!.gridViewBounds(c.clientWidth, c.clientHeight - ph), { padding: { top: 0, left: 0, right: 0, bottom: ph }, duration: 0 });
+      };
+      requestAnimationFrame(() => setMapView(map, fitGrid));
     } else if (!on && framed.current) {
       framed.current = false;
       setMapView(map, null);
@@ -37,23 +43,46 @@ export function WeatherLayers({ map, now }: { map: MLMap | null; now: Date }) {
       try {
         const [g, l] = (await Promise.all([ext.grid!(), ext.capasLayer!()])) as [Record<string, any>, Record<string, any>];
         gridMod.current = g;
-        // Si el caché local quedó con un formato viejo, loadGrid falla: se cae a la grilla del fixture.
-        const grid = await g.loadGrid().catch((e: unknown) => { console.warn('[hanan] grilla: uso el fixture', e); return g.fixtureGrid(); });
         if (!alive) return;
-        handle = l.attachWeatherLayer(map, grid) as Handle;
-        const hours: Date[] = grid.times ?? [];
-        const t0 = hours.reduce((a: Date | undefined, h: Date) => (!a || Math.abs(+h - +now) < Math.abs(+a - +now) ? h : a), undefined) ?? now;
-        handle.setTime(t0); handle.setVisible(false);
-        setTime(t0);
-        setState({ handle, hours });
+        // 1) Grilla del fixture al instante (offline-first): los controles aparecen sin esperar la red.
+        const mount = (grid: any) => {
+          try { handle?.destroy(); } catch { /* ya destruida */ }
+          handle = l.attachWeatherLayer(map, grid) as Handle;
+          const hours: Date[] = grid.times ?? [];
+          const cur = sel.current;
+          const t0 = hours.reduce((a: Date | undefined, h: Date) => (!a || Math.abs(+h - +cur.time) < Math.abs(+a - +cur.time) ? h : a), undefined) ?? cur.time;
+          handle.setTime(t0);
+          if (cur.variable) handle.setVariable(cur.variable);
+          handle.setVisible(!!cur.variable);
+          setTime(t0);
+          setState({ handle, hours });
+        };
+        mount(g.fixtureGrid());
+        // 2) Después, la grilla de la red o del caché (si es distinta del fixture), conservando capa y hora.
+        // Si el caché local quedó con un formato viejo, loadGrid lo descarta y devuelve el fixture.
+        const fresh = await g.loadGrid().catch((e: unknown) => { console.warn('[hanan] grilla: sigo con el fixture', e); return null; });
+        if (alive && fresh && fresh.origin !== 'fixture') mount(fresh);
       } catch (e) { console.warn('[hanan] capas no disponibles', e); }
     })();
     return () => { alive = false; framed.current = false; try { handle?.destroy(); } catch { /* el mapa ya se destruyó */ } setState(null); };
   }, [map]);
 
+  // Si la franja cambia de alto (aparece el scrubber, se expande la leyenda), se reencuadra la grilla.
+  useEffect(() => {
+    const el = hostRef.current; if (!el || !map) return;
+    let last = el.offsetHeight;
+    const ro = new ResizeObserver(() => {
+      if (el.offsetHeight === last) return;
+      last = el.offsetHeight;
+      if (framed.current) refitMapView(map);
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [map, state]);
+
   if (!state) return null;
   return (
-    <div className="capas-host">
+    <div className="capas-host" ref={hostRef}>
       <Slot C={CapasControls} title="Capas" props={{
         variable,
         onVariable: (v: string | null) => { setVariable(v); if (v) state.handle.setVariable(v); state.handle.setVisible(!!v); frame(!!v); },

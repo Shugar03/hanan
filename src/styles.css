@@ -269,7 +269,12 @@ html { scroll-padding-bottom: 88px; }
 .loading { padding: var(--space-6); text-align: center; }
 
 .capas-host { position: absolute; z-index: 6; right: var(--space-3); top: var(--space-3); width: min(380px, calc(100% - 2 * var(--space-3))); }
-@media (max-width: 599px) { .capas-host { left: var(--space-2); right: var(--space-2); top: var(--space-2); width: auto; } }
+/* Mobile: franja compacta sobre el borde inferior del mapa (no tapa los pines); el Paso de Jama sube arriba. */
+@media (max-width: 719px) {
+  .capas-host { left: var(--space-2); right: var(--space-2); top: auto; bottom: var(--space-2); width: auto; }
+  .map-wrap .pass { top: var(--space-2); bottom: auto; left: var(--space-2); min-height: 32px; padding: 4px var(--space-3); grid-template-columns: auto auto auto; }
+  .map-wrap .pass .pass-u { grid-column: auto; }
+}
 
 /* Mi noche */
 .noche { display: flex; flex-direction: column; gap: var(--space-4); }

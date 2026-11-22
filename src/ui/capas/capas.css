@@ -173,6 +173,34 @@
 .capas-cats i { width: 9px; height: 9px; border-radius: 50%; box-shadow: 0 0 0 1px var(--text-2); }
 .capas-attrib { margin: 0; font-size: 11px; color: var(--text-2); }
 
+/* Línea de leyenda colapsada: solo en mobile. */
+.capas-legend-line { display: none; }
+.capas-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---------- Mobile (< 720 px): franja compacta sobre el borde inferior del mapa ----------
+   Chips scrolleables + scrubber con play en ≤ 96 px; la leyenda queda en una línea que se expande con un toque. */
+@media (max-width: 719px) {
+  .capas { gap: 2px; padding: 2px var(--space-2); border-radius: var(--radius-lg); }
+  .capas-chip { padding: 0 var(--space-3); }
+  .capas-time { grid-template-columns: 44px minmax(0, 1fr) auto; gap: var(--space-2); height: 44px; }
+  .capas-scrub { padding-bottom: 0; }
+  .capas-days { display: none; }
+  .capas-now { display: flex; align-items: baseline; gap: 4px; min-width: 0; }
+  .capas-now-hm { font-size: var(--size-md); }
+  .capas-legend-line {
+    order: -1; display: flex; align-items: center; gap: var(--space-2); min-height: 36px; width: 100%;
+    padding: 0 var(--space-1); background: transparent; border: 0; border-bottom: 1px solid var(--border);
+    color: var(--text); font: 500 var(--size-xs)/1 var(--font-texto); cursor: pointer; text-align: left;
+  }
+  .capas-legend-line-title { font-weight: 600; }
+  .capas-legend-line-end { color: var(--text-2); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .capas-bar-line { flex: 1; height: 6px; display: block; }
+  .capas-legend-chev { flex: none; fill: none; stroke: currentColor; stroke-width: 2; transform: rotate(180deg); }
+  .capas-legend-line[aria-expanded="true"] .capas-legend-chev { transform: none; }
+  .capas-legend { order: -2; display: none; padding: var(--space-2) var(--space-1) 0; }
+  .capas-legend[data-open="true"] { display: grid; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .capas-chip { transition: none; }
 }

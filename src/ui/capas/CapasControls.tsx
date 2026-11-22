@@ -48,6 +48,7 @@ type Props = {
 export default function CapasControls({ variable, onVariable, time, onTime, hours, playing, onPlay }: Props) {
   const modo = useModo();
   const [ownPlaying, setOwnPlaying] = useState(false);
+  const [legendOpen, setLegendOpen] = useState(false);
   const isPlaying = playing ?? ownPlaying;
   const setPlaying = (b: boolean) => { if (onPlay) onPlay(b); if (playing === undefined) setOwnPlaying(b); };
 
@@ -115,7 +116,19 @@ export default function CapasControls({ variable, onVariable, time, onTime, hour
             </output>
           </div>
 
-          <div className="capas-legend">
+          {/* Mobile (< 720 px): leyenda colapsada en una línea (gradiente + extremos); un toque la expande. */}
+          <button type="button" className="capas-legend-line" aria-expanded={legendOpen} aria-controls="capas-legend-full"
+            onClick={() => setLegendOpen((o) => !o)}>
+            <span className="capas-legend-line-title">{CHIPS.find((c) => c.v === variable)?.label}</span>
+            <span className="capas-legend-line-end">{variable === 'score' ? 'Malo' : `${ramp.min} ${ramp.unit}`}</span>
+            <span className="capas-bar capas-bar-line" style={{ background: legendGradient(variable, modo) }} role="img"
+              aria-label={`Escala de ${ramp.title}: de ${ramp.min} a ${ramp.max} ${ramp.unit}`} />
+            <span className="capas-legend-line-end">{variable === 'score' ? 'Excelente' : `${ramp.max} ${ramp.unit}`}</span>
+            <svg className="capas-legend-chev" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="m6 15 6-6 6 6" /></svg>
+            <span className="capas-sr">{legendOpen ? 'Ocultar leyenda' : 'Ver leyenda completa'}</span>
+          </button>
+
+          <div className="capas-legend" id="capas-legend-full" data-open={legendOpen}>
             <div className="capas-legend-head">
               <span className="capas-legend-title">{ramp.title}</span>
               <span className="capas-legend-unit">{ramp.unit}</span>

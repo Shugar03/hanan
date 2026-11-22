@@ -7,23 +7,47 @@
 Proyecto creado para la **Cursor Hackathon Jujuy** (JujuyDev · Tren Solar de la Quebrada, 22/11/2026).
 
 ## Qué hace
-- **Para aficionados y turistas:** score de cielo de 0 a 100 por punto y por hora (nubes por capa, luna, oscuridad, humedad, viento), la mejor noche de los próximos 7 días, qué se ve (Vía Láctea, planetas, Nubes de Magallanes), estado del Paso de Jama y salidas de guías esa noche con reserva por WhatsApp.
-- **Para guías y operadores:** alertas de noches excelentes, señales de demanda ("Quiero ir") por punto y noche, publicación de salidas y reprogramación por clima.
-- **Telemetría espacial:** posición de la ISS, SAOCOM 1A/1B y ARSAT 2 sobre la Puna, con aviso solo cuando el pase es visible.
-- **Offline-first y modo rojo** para usar en el salar sin señal y sin arruinar la vista nocturna.
+Una app (PWA, funciona sin señal) con cuatro pestañas y un modo guía:
+
+| Pestaña | Qué es |
+|---|---|
+| **Explorar** | Mapa de la Puna con los 6 puntos de la Ruta de las Estrellas, score de la noche, mejor ventana de 7 días, qué se ve, capas de nubes/viento/score tipo Ventusky y estado del Paso de Jama |
+| **Cielo** | Planetario en vivo tipo Stellarium: estrellas, constelaciones en español, Vía Láctea, Luna, planetas y satélites (ISS, SAOCOM, ARSAT) |
+| **Salidas** | Marketplace tipo Luma: salidas de guías con precio, ficha con el cielo de esa noche, reserva con seña (simulada en la demo), `.ics` y garantía de cielo |
+| **Mi noche** | Planificador para aficionados: 3 planes recomendados con su porqué, qué ver, checklist y alertas |
+| **Modo guía** | Crear salidas con precio, ver demanda, alertas de noches excelentes y reprogramar |
+
+Además: **modo rojo** de visión nocturna y simulador de fecha (`?fecha=2026-06-20T22:00`). Definición de producto: [`docs/product/product-vision.md`](docs/product/product-vision.md).
+
+## Stack
+React + Vite + TypeScript · MapLibre GL · astronomy-engine · satellite.js · Open-Meteo · CelesTrak · Cloudflare Worker (`worker/`) · vitest · Playwright (`e2e/`).
+
+## Correr la app
+```bash
+npm install
+npm run dev                 # desarrollo
+npm test                    # tests unitarios (vitest)
+npm run build && npx vite preview --port 4173 --strictPort
+cd e2e && npm install && npx playwright install chromium && HANAN_URL=http://localhost:4173 npx playwright test
+```
+Deep links para la demo: `?tab=explorar|cielo|salidas|noche&punto=susques`, `&salida=<id>`, `?guia`, `&fecha=2026-11-22T23:30`.
+Las salidas, guías, precios y demanda son **de ejemplo** y están rotulados así en la app.
 
 ## Documentación
 | | |
 |---|---|
 | Problemáticas de la Puna (investigación) | [`docs/research/problematicas-puna-jujuy.md`](docs/research/problematicas-puna-jujuy.md) |
 | Factibilidad y fuentes de datos | [`docs/research/factibilidad-cielo-puna.md`](docs/research/factibilidad-cielo-puna.md) |
-| Especificación de producto | [`docs/product/spec.md`](docs/product/spec.md) |
+| Definición de producto (CPO) | [`docs/product/product-vision.md`](docs/product/product-vision.md) |
+| Especificación del motor de cielo | [`docs/product/spec.md`](docs/product/spec.md) |
 | Modelo de negocio | [`docs/product/business-model.md`](docs/product/business-model.md) |
 | Roadmap y etapas | [`docs/product/roadmap.md`](docs/product/roadmap.md) |
 | Arquitectura | [`docs/tech/architecture.md`](docs/tech/architecture.md) · [ADRs](docs/adr/) |
 | Glosario | [`CONTEXT.md`](CONTEXT.md) |
 | Marca | [`docs/brand/brand-guide.md`](docs/brand/brand-guide.md) · [`design/`](design/) |
-| Pitch | [`pitch/index.html`](pitch/index.html) |
+| Pitch | [`pitch/index.html`](pitch/index.html) · [`pitch/hanan-pitch.pdf`](pitch/hanan-pitch.pdf) |
+| Worker de caché | [`worker/README.md`](worker/README.md) |
+| Tests E2E | [`e2e/README.md`](e2e/README.md) |
 
 ## Prueba de concepto
 ```bash
@@ -39,5 +63,7 @@ node season.mjs   # temporada de la Vía Láctea mes a mes
 - Efemérides: [astronomy-engine](https://github.com/cosinekitty/astronomy) (MIT). Propagación SGP4: [satellite.js](https://github.com/shashwatak/satellite-js) (MIT).
 - Estado del Paso de Jama: [argentina.gob.ar — Pasos internacionales](https://www.argentina.gob.ar/seguridad/pasosinternacionales/detalle/ruta/19/Jama).
 - Climatología: Servicio Meteorológico Nacional (normales de La Quiaca).
+- Catálogo estelar y constelaciones: [d3-celestial](https://github.com/ofrohn/d3-celestial) (BSD-3; ver `src/data/catalog/ATTRIBUTION.md`).
+- Mapa base: Esri (World Hillshade Dark / Dark Gray) · © OpenStreetMap.
 - Contaminación lumínica (roadmap): Falchi et al. 2016, *World Atlas of Artificial Night Sky Brightness* — CC BY‑NC 4.0.
-- Tipografías: Bricolage Grotesque, IBM Plex Sans e IBM Plex Mono (SIL OFL).
+- Tipografía: Schibsted Grotesk (SIL OFL).

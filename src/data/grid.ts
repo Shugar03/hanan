@@ -145,9 +145,29 @@ export function openMeteoGridBody() {
   };
 }
 
-/** Fixture siempre; red opcional (si hay conexión) con caché de 1 h. Ante cualquier error: caché → fixture. */
-export async function loadGrid(): Promise<Grid> {
+/** true si un JSON (p. ej. el caché de localStorage) tiene el formato compacto actual y la misma grilla que el fixture. */
+export function isCurrentGridJson(j: unknown): j is GridJson {
+  const g = j as Partial<GridJson> | null;
+  if (!g || typeof g !== 'object' || !g.grid || !g.encoding?.vars || !g.vars || typeof g.start !== 'string' || !Number.isFinite(g.hours)) return false;
+  const m = g.grid;
+  if (m.latNorth !== META.latNorth || m.lonWest !== META.lonWest || m.step !== META.step || m.nLat !== META.nLat || m.nLon !== META.nLon) return false;
+  if (!Array.isArray(g.elevation) || g.elevation.length !== META.nLat * META.nLon) return false;
+  return (Object.keys(RAW_MAP) as RawVar[]).every((k) => g.encoding!.vars[k] && Array.isArray(g.vars![k]) && g.vars![k].length === g.hours);
+}
+
+/** Lee el caché de la grilla; si es de un formato viejo (o está roto) lo descarta. */
+function readGridCache(): { at: number; data: GridJson } | null {
   const c = readCache<GridJson>('grid');
+  if (!c) return null;
+  if (isCurrentGridJson(c.data)) return c;
+  try { localStorage.removeItem('hanan:grid'); } catch { /* sin localStorage */ }
+  return null;
+}
+
+/** Fixture siempre; red opcional (si hay conexión) con caché de 1 h. Ante cualquier error: caché → fixture.
+ *  Un caché de formato viejo se descarta y no se usa. */
+export async function loadGrid(): Promise<Grid> {
+  const c = readGridCache();
   if (c && Date.now() - c.at < TTL) return parseGrid(c.data, 'cache', new Date(c.at));
   const online = typeof navigator !== 'undefined' && navigator.onLine !== false && typeof window !== 'undefined';
   if (online) {

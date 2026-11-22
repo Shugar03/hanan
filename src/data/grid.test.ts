@@ -88,3 +88,30 @@ describe('grilla Open-Meteo', () => {
     expect(skipped).toBeLessThanOrEqual(6);
   });
 });
+
+describe('loadGrid · caché de formato viejo', () => {
+  const mem = new Map<string, string>();
+  const stub = { getItem: (k: string) => mem.get(k) ?? null, setItem: (k: string, v: string) => void mem.set(k, v), removeItem: (k: string) => void mem.delete(k), clear: () => mem.clear() };
+  test('descarta el caché viejo, lo borra y cae al fixture', async () => {
+    const prev = (globalThis as { localStorage?: unknown }).localStorage;
+    (globalThis as { localStorage?: unknown }).localStorage = stub;
+    try {
+      const { loadGrid, isCurrentGridJson } = await import('./grid');
+      // Formato v1 (sin encoding): antes rompía parseGrid con "Cannot read properties of undefined (reading 'vars')"
+      mem.set('hanan:grid', JSON.stringify({ at: Date.now(), data: { grid: { latNorth: 0 }, times: [], values: {} } }));
+      expect(isCurrentGridJson(JSON.parse(mem.get('hanan:grid')!).data)).toBe(false);
+      const g = await loadGrid();
+      expect(g.origin).toBe('fixture');
+      expect(g.times.length).toBeGreaterThan(0);
+      expect(mem.has('hanan:grid')).toBe(false);
+      // El fixture sí tiene el formato actual
+      const fx = (await import('../../fixtures/openmeteo_grid.json')).default;
+      expect(isCurrentGridJson(fx)).toBe(true);
+      // Un caché vigente y válido se usa
+      mem.set('hanan:grid', JSON.stringify({ at: Date.now(), data: fx }));
+      expect((await loadGrid()).origin).toBe('cache');
+    } finally {
+      (globalThis as { localStorage?: unknown }).localStorage = prev;
+    }
+  });
+});
